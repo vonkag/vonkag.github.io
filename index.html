@@ -218,6 +218,28 @@
 
   <div class="grid">
 
+    <!-- Self-hosted, no third party. 2.7MB, and preload="none" means nothing downloads
+         until the visitor actually presses play. The webm was dropped: on a wipe this
+         busy, VP9 came out larger than x264. -->
+    <article class="card feature">
+      <div class="media">
+        <video controls preload="none" playsinline poster="media/telco-rebrand-poster.jpg">
+          <source src="media/telco-rebrand.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="body">
+        <h3>Rebrandable retail environment</h3>
+        <p class="kicker">VR environment · client demo piece</p>
+        <p>
+          A retail store environment built so the entire space could be reskinned to a
+          customer's branding. The clip wipes between four variations of the same scene,
+          made to show prospective clients what their own branded VR experience would look
+          like. Brands shown are mock-ups.
+        </p>
+        <ul class="stack"><li>Unity</li><li>Environment art</li><li>Real-time</li><li>Lighting</li></ul>
+      </div>
+    </article>
+
     <!-- PATTERN for a self-hosted silent loop. Duplicate per project.
          muted + playsinline are required or autoplay fails on Chrome and iOS. -->
     <article class="card">
