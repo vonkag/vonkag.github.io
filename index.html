@@ -9,6 +9,8 @@
 <!-- Fetched in parallel with the CSS instead of after it. crossorigin is required on font
      preloads even for same-origin files, or the browser fetches them twice. -->
 <link rel="preload" href="fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<!-- the H1 weight only. The 600 is for project titles further down and can wait. -->
+<link rel="preload" href="fonts/saira-cond-800-latin.woff2" as="font" type="font/woff2" crossorigin>
 
 <!-- Open Graph: controls how the link previews when pasted into an email or a chat.
      Replace the og:image with a real 1200x630 jpg once you have one. -->
@@ -38,6 +40,43 @@
     unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
   }
 
+  /* Saira Condensed, self-hosted. SIL Open Font License, same as Inter. Display face only,
+     the name and the project titles, so two static weights cover it and there is no need
+     for the variable file. Vietnamese subset skipped; latin-ext is kept, it is what
+     carries the macrons. */
+  @font-face{
+    font-family:'Saira Condensed';
+    font-style:normal;
+    font-weight:600;
+    font-display:swap;
+    src:url('fonts/saira-cond-600-latin-ext.woff2') format('woff2');
+    unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  @font-face{
+    font-family:'Saira Condensed';
+    font-style:normal;
+    font-weight:600;
+    font-display:swap;
+    src:url('fonts/saira-cond-600-latin.woff2') format('woff2');
+    unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face{
+    font-family:'Saira Condensed';
+    font-style:normal;
+    font-weight:800;
+    font-display:swap;
+    src:url('fonts/saira-cond-800-latin-ext.woff2') format('woff2');
+    unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  @font-face{
+    font-family:'Saira Condensed';
+    font-style:normal;
+    font-weight:800;
+    font-display:swap;
+    src:url('fonts/saira-cond-800-latin.woff2') format('woff2');
+    unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+
   :root{
     --ink:#141414;
     --muted:#5c5c5c;
@@ -45,6 +84,8 @@
     --bg:#ffffff;
     --card:#fafafa;
     --maxw:1080px;
+    /* display face for the name and the project titles; everything else stays Inter */
+    --display:'Saira Condensed','Arial Narrow','Segoe UI',system-ui,sans-serif;
   }
   /* Light is the default for everyone, regardless of OS setting. Dark is opt-in via the
      toggle and persists in localStorage. Deliberate: the site is designed light and the
@@ -75,9 +116,12 @@
   /* ---------- header ---------- */
   header{padding:64px 0 26px;}
   h1{
-    font-size:clamp(28px,5vw,44px);
-    letter-spacing:.06em;font-weight:650;text-transform:uppercase;
-    margin:0 0 6px;
+    font-family:var(--display);
+    /* condensed type reads smaller at a given size and needs less tracking than Inter did
+       to keep uppercase open, so both numbers moved with the face */
+    font-size:clamp(34px,6vw,54px);
+    letter-spacing:.035em;font-weight:800;text-transform:uppercase;
+    line-height:1.05;margin:0 0 6px;
   }
   .role{color:var(--muted);margin:0 0 14px;font-size:clamp(15px,2vw,17px);}
   .meta{color:var(--muted);font-size:14px;}
@@ -134,7 +178,12 @@
   }
   .card video,.card img{width:100%;height:100%;object-fit:cover;display:block;}
   .card .body{padding:14px 0 0;}
-  .card h3{margin:0 0 2px;font-size:17px;}
+  /* project titles take the display face too. The kicker and body under them stay Inter,
+     which is what stops the page reading as a poster. */
+  .card h3{
+    font-family:var(--display);
+    font-size:20px;font-weight:600;letter-spacing:.01em;margin:0 0 3px;
+  }
   .card .kicker{color:var(--muted);font-size:13px;margin:0 0 10px;}
   .card .kicker a{border-bottom:1px solid var(--rule);text-decoration:none;}
   .card .kicker a:hover{border-bottom-color:var(--ink);}
@@ -201,6 +250,7 @@
   /* ---------- carousel ----------
      Built on native scroll-snap rather than transforms, so touch swipe, momentum and
      keyboard scrolling all come from the browser. The script only nudges it along. */
+  .carousel-wrap{position:relative;}
   .carousel{
     display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;
     scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:2px;
@@ -215,6 +265,27 @@
   @media (max-width:720px){
     .carousel .pane{width:78%;}
   }
+
+  /* Arrows. Hidden until the script adds .has-controls, because without JS they would
+     scroll nothing, and only on a mouse: touch already has the swipe, and on a phone
+     the buttons would sit right on top of a pane that is 78% of the screen wide. */
+  .car-btn{
+    position:absolute;top:50%;transform:translateY(-50%);z-index:2;
+    width:34px;height:34px;padding:0;border-radius:50%;
+    border:1px solid var(--rule);background:var(--bg);color:var(--ink);
+    display:none;align-items:center;justify-content:center;cursor:pointer;
+    opacity:0;transition:opacity .18s ease;box-shadow:0 1px 5px rgba(0,0,0,.16);
+  }
+  .car-btn.prev{left:-8px;}
+  .car-btn.next{right:-8px;}
+  .car-btn svg{width:15px;height:15px;display:block;}
+  @media (hover:hover) and (pointer:fine){
+    .carousel-wrap.has-controls .car-btn{display:flex;}
+  }
+  /* fade in with the card, but always show for a keyboard visitor who has tabbed to one */
+  .carousel-wrap:hover .car-btn,
+  .carousel-wrap:focus-within .car-btn{opacity:1;}
+  .car-btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px;opacity:1;}
 
   /* ---------- lightbox ----------
      Native <dialog>: ESC and backdrop dismissal come free, focus is trapped for us,
@@ -370,10 +441,11 @@
     <article class="card feature">
       <div class="media">
         <!-- No autoplay attribute on purpose. That would force the 2.7MB down for every
-             visitor whether they reach it or not. The script starts it when it scrolls
-             into view instead. muted is required or the browser refuses to play;
-             controls let them unmute. -->
-        <video class="play-in-view" controls muted loop playsinline preload="none"
+             visitor whether they reach it or not. The playback coordinator starts it once
+             this card is the one nearest the middle of the screen. muted is required or
+             the browser refuses to play; controls let them unmute, and pressing play by
+             hand pins it so scrolling does not take it away again. -->
+        <video controls muted loop playsinline preload="none"
                poster="media/telco-rebrand-poster.jpg">
           <source src="media/telco-rebrand.mp4" type="video/mp4">
         </video>
@@ -391,14 +463,14 @@
     <article class="card feature">
       <div class="portrait-row">
         <div class="pane">
-          <video class="play-in-view zoomable" muted loop playsinline preload="none"
+          <video class="zoomable" muted loop playsinline preload="none"
                  poster="media/mx-final-poster.jpg"
                  data-caption="MX Mechanical Mini, final render">
             <source src="media/mx-final.mp4" type="video/mp4">
           </video>
         </div>
         <div class="pane">
-          <video class="play-in-view zoomable" muted loop playsinline preload="none"
+          <video class="zoomable" muted loop playsinline preload="none"
                  poster="media/mx-breakdown-poster.jpg"
                  data-caption="MX Mechanical Mini, breakdown from wireframe to final">
             <source src="media/mx-breakdown.mp4" type="video/mp4">
@@ -416,8 +488,9 @@
       </div>
     </article>
 
-    <!-- PATTERN for a self-hosted silent loop. Duplicate per project.
-         muted + playsinline are required or autoplay fails on Chrome and iOS. -->
+    <!-- PATTERN for a self-hosted silent loop. Duplicate per project. muted + playsinline
+         are required or autoplay fails on Chrome and iOS. No class needed: the coordinator
+         picks up every <video> inside a .card. -->
     <!-- Deliberately LAST and deliberately DATED. This cut is from Jan 2023, so it predates
          SkillsVR and GeneXR entirely and shows character animation rather than real-time.
          Undated and at the top it would read as current work and undersell the last three
@@ -453,21 +526,32 @@
   <div class="grid">
 
     <article class="card feature">
-      <div class="carousel" aria-label="TallyToo screenshots">
-        <div class="pane"><img class="zoomable" src="media/tallytoo-01.jpg"
-             alt="TallyToo, tally list" data-caption="TallyToo, tally list"></div>
-        <div class="pane"><img class="zoomable" src="media/tallytoo-02.jpg"
-             alt="TallyToo, tracking anything countable" data-caption="TallyToo, tracking anything countable"></div>
-        <div class="pane"><img class="zoomable" src="media/tallytoo-03.jpg"
-             alt="TallyToo, insights and trends" data-caption="TallyToo, insights and trends"></div>
-        <div class="pane"><img class="zoomable" src="media/tallytoo-04.jpg"
-             alt="TallyToo, shared tallies" data-caption="TallyToo, shared tallies"></div>
-        <div class="pane"><img class="zoomable" src="media/tallytoo-05.jpg"
-             alt="TallyToo, creating a tally" data-caption="TallyToo, creating a tally"></div>
-        <div class="pane"><img class="zoomable" src="media/tallytoo-06.jpg"
-             alt="TallyToo, themes" data-caption="TallyToo, themes"></div>
-        <div class="pane"><img class="zoomable" src="media/tallytoo-07.jpg"
-             alt="TallyToo, dark mode" data-caption="TallyToo, dark mode"></div>
+      <!-- .carousel-wrap only exists to position the arrows over the strip. -->
+      <div class="carousel-wrap">
+        <div class="carousel" aria-label="TallyToo screenshots">
+          <div class="pane"><img class="zoomable" src="media/tallytoo-01.jpg"
+               alt="TallyToo, tally list" data-caption="TallyToo, tally list"></div>
+          <div class="pane"><img class="zoomable" src="media/tallytoo-02.jpg"
+               alt="TallyToo, tracking anything countable" data-caption="TallyToo, tracking anything countable"></div>
+          <div class="pane"><img class="zoomable" src="media/tallytoo-03.jpg"
+               alt="TallyToo, insights and trends" data-caption="TallyToo, insights and trends"></div>
+          <div class="pane"><img class="zoomable" src="media/tallytoo-04.jpg"
+               alt="TallyToo, shared tallies" data-caption="TallyToo, shared tallies"></div>
+          <div class="pane"><img class="zoomable" src="media/tallytoo-05.jpg"
+               alt="TallyToo, creating a tally" data-caption="TallyToo, creating a tally"></div>
+          <div class="pane"><img class="zoomable" src="media/tallytoo-06.jpg"
+               alt="TallyToo, themes" data-caption="TallyToo, themes"></div>
+          <div class="pane"><img class="zoomable" src="media/tallytoo-07.jpg"
+               alt="TallyToo, dark mode" data-caption="TallyToo, dark mode"></div>
+        </div>
+        <button class="car-btn prev" type="button" aria-label="Previous screenshot">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4 7 12l8 8"/></svg>
+        </button>
+        <button class="car-btn next" type="button" aria-label="Next screenshot">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 4 8 8-8 8"/></svg>
+        </button>
       </div>
       <div class="body">
         <h3>TallyToo</h3>
@@ -563,135 +647,319 @@
   sync();
 })();
 
-/* Hover-to-play for the thumbnail grid.
-   Desktop: play on hover or keyboard focus, reset on leave.
-   Touch:   there is no hover, so play whichever tile is actually on screen. */
+/* ---------- playback coordinator ----------
+   Everything on the page that can play - the VR tile grid, the self-hosted loops and the
+   Vimeo reel - registers here instead of running its own observer. Exactly one CARD plays
+   at a time, so scrolling the reel into view pauses the keyboard loops rather than
+   stacking four videos on top of each other.
+
+   Priority: an explicit action wins (hovering a tile, tapping one, or pressing play on a
+   video that has controls). Failing that, the card nearest the middle of the viewport
+   plays, provided enough of it is genuinely on screen. */
 (function () {
-  var tiles = [].slice.call(document.querySelectorAll('.tile video'));
-  if (!tiles.length) return;
-
-  function play(v) {
-    var p = v.play();
-    // play() rejects if the pointer leaves before the promise settles. Expected, ignore it.
-    if (p && p.catch) p.catch(function () {});
-    v.parentNode.classList.add('is-playing');
-  }
-  function stop(v) {
-    v.pause();
-    v.currentTime = 0;
-    v.parentNode.classList.remove('is-playing');
-  }
-
-  var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   var reduced  = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-  if (canHover) {
-    tiles.forEach(function (v) {
-      var tile = v.parentNode;
-      tile.addEventListener('mouseenter', function () { play(v); });
-      tile.addEventListener('mouseleave', function () { stop(v); });
-      tile.addEventListener('focusin',    function () { play(v); });
-      tile.addEventListener('focusout',   function () { stop(v); });
-    });
-  } else if (!reduced && 'IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        var v = e.target.querySelector('video');
-        if (!v) return;
-        if (e.isIntersecting && e.intersectionRatio > 0.6) { play(v); } else { stop(v); }
-      });
-    }, { threshold: [0, 0.6, 1] });
-    tiles.forEach(function (v) { io.observe(v.parentNode); });
+  function viewH() { return window.innerHeight || document.documentElement.clientHeight; }
+
+  /* How much of an element is on screen, 0 to 1. Divided by whichever is smaller, its own
+     height or the window, so a piece taller than the window can still reach 1. */
+  function seen(el) {
+    var r = el.getBoundingClientRect(), h = viewH();
+    if (!r.height) return 0;
+    var v = Math.min(r.bottom, h) - Math.max(r.top, 0);
+    return Math.max(0, v) / Math.min(r.height, h);
   }
-  /* If neither branch runs, tiles just show their poster frame. Nothing breaks. */
-})();
+  function centreDist(el) {
+    var r = el.getBoundingClientRect();
+    return Math.abs((r.top + r.bottom) / 2 - viewH() / 2);
+  }
 
-/* Feature videos: start muted playback once they scroll into view, rather than using the
-   autoplay attribute, which downloads the file for everyone regardless. Skipped entirely
-   for anyone who has asked for reduced motion. */
-(function () {
-  var vids = [].slice.call(document.querySelectorAll('video.play-in-view'));
-  if (!vids.length || !('IntersectionObserver' in window)) return;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  var io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      var v = e.target;
-      if (e.isIntersecting && e.intersectionRatio > 0.4) {
-        var p = v.play();
-        if (p && p.catch) p.catch(function () {});
-      } else if (!v.paused) {
+  /* --- players: one shape for a <video> and for the Vimeo iframe --- */
+  function nativePlayer(v) {
+    var p = {
+      el: v,
+      // The play event is dispatched asynchronously, so by the time it lands `current`
+      // may already have moved on. This flag is how we tell our own play() apart from
+      // the visitor pressing the button; guessing from state pinned the card for good.
+      ours: false,
+      start: function () {
+        p.ours = true;
+        var q = v.play();
+        // play() rejects if we pause again before the promise settles. Expected, ignore it.
+        if (q && q.catch) q.catch(function () {});
+      },
+      stop: function (rewind) {
+        p.ours = false;
         v.pause();
+        if (rewind) { try { v.currentTime = 0; } catch (e) {} }
+      }
+    };
+    return p;
+  }
+  /* The reel has no src until it is first started, so the player is never even fetched for
+     a visitor who does not scroll that far. After that, play and pause go over postMessage,
+     which needs no SDK and no third-party script. */
+  function vimeoPlayer(f) {
+    function cmd(method) {
+      if (!f.contentWindow) return;
+      try {
+        f.contentWindow.postMessage(JSON.stringify({ method: method }), 'https://player.vimeo.com');
+      } catch (e) {}
+    }
+    return {
+      el: f,
+      start: function () { if (!f.src) { f.src = f.dataset.src; } else { cmd('play'); } },
+      stop:  function () { if (f.src) cmd('pause'); }
+    };
+  }
+
+  /* --- groups: one per card --- */
+  var groups = [];
+  [].forEach.call(document.querySelectorAll('.card'), function (card) {
+    var vids  = [].slice.call(card.querySelectorAll('video'));
+    var frame = card.querySelector('iframe.vimeo-defer');
+    if (!vids.length && !frame) return;
+
+    var players = vids.map(nativePlayer);
+    if (frame) players.push(vimeoPlayer(frame));
+
+    // The tile grid is the only card holding several independent clips, so just one of
+    // them runs. Elsewhere a card's clips are a deliberate set - the keyboard final and
+    // its breakdown - and belong on screen together.
+    var tiles = !!card.querySelector('.tiles');
+
+    var g = {
+      players: players,
+      tiles: tiles,
+      // measure the media, not the whole card, or the text under it drags the centre down
+      box: card.querySelector('.tiles,.portrait-row,.embed,.media') || card,
+      // a full-width piece should have the page's attention before it starts; a small
+      // tile only needs to be properly on screen
+      needs: tiles ? 0.6 : 0.92,
+      // on a mouse the tile grid is hover-driven, so it never starts by itself
+      manual: tiles && canHover,
+      active: null
+    };
+
+    g.syncCaptions = function () {
+      if (!g.tiles) return;
+      g.players.forEach(function (p) {
+        p.el.parentNode.classList.toggle('is-playing', g.active === p);
+      });
+    };
+    g.stop = function () {
+      // tiles rewind so the next hover starts clean; a longer piece resumes where it was
+      g.players.forEach(function (p) { p.stop(g.tiles); });
+      g.active = null;
+      g.syncCaptions();
+    };
+    g.start = function (only) {
+      if (g.tiles) {
+        var pick = only, best = Infinity;
+        if (!pick) {
+          g.players.forEach(function (p) {
+            if (seen(p.el) <= 0) return;
+            var d = centreDist(p.el);
+            if (d < best) { best = d; pick = p; }
+          });
+        }
+        g.players.forEach(function (p) { if (p !== pick) p.stop(true); });
+        if (pick) pick.start();
+        g.active = pick;
+      } else {
+        g.players.forEach(function (p) { p.start(); });
+        g.active = true;
+      }
+      g.syncCaptions();
+    };
+
+    groups.push(g);
+  });
+  if (!groups.length) return;
+
+  /* --- who is playing --- */
+  var current = null, locked = null;
+
+  function setCurrent(g) {
+    if (g === current) return;
+    if (current) current.stop();
+    current = g;
+    if (g) g.start();
+  }
+  function claim(g, only) {
+    if (current && current !== g) current.stop();
+    current = g;
+    g.start(only);
+  }
+  function lock(g, only) { locked = g; claim(g, only); }
+  function unlock(g) {
+    if (locked !== g) return;
+    locked = null;
+    if (current) { current.stop(); current = null; }
+    ambient();
+  }
+
+  function ambient() {
+    if (locked) {
+      // a locked card keeps the floor until it is scrolled off the screen entirely
+      if (seen(locked.box) > 0.05) return;
+      locked = null;
+    }
+    if (reduced) { setCurrent(null); return; }
+
+    var best = null, bestD = Infinity;
+    groups.forEach(function (g) {
+      if (g.manual || seen(g.box) < g.needs) return;
+      var d = centreDist(g.box);
+      if (d < bestD) { bestD = d; best = g; }
+    });
+    setCurrent(best);
+
+    // Within the tile grid the centre-most tile is the one that plays, and that changes
+    // as you scroll even though the card itself has not.
+    if (best && best.tiles) best.start();
+  }
+
+  /* --- explicit actions --- */
+  groups.forEach(function (g) {
+    g.players.forEach(function (p) {
+      // Pressing play on a video that has its own controls is a choice, and should not be
+      // undone by the next scroll event.
+      if (p.el.controls) {
+        p.el.addEventListener('play',  function () { if (!p.ours) lock(g, p); });
+        p.el.addEventListener('pause', function () { p.ours = false; if (locked === g) locked = null; });
+      }
+      if (!g.tiles) return;
+
+      var tile = p.el.parentNode;
+      if (canHover) {
+        tile.addEventListener('mouseenter', function () { lock(g, p); });
+        tile.addEventListener('mouseleave', function () { unlock(g); });
+        tile.addEventListener('focusin',    function () { lock(g, p); });
+        tile.addEventListener('focusout',   function () { unlock(g); });
+      } else {
+        // No hover on a phone, so a tap is how you say "that one". Not a lock: scrolling
+        // on hands back to whichever tile is nearest the middle.
+        tile.addEventListener('touchstart', function () { claim(g, p); }, { passive: true });
       }
     });
-  }, { threshold: [0, 0.4, 1] });
+  });
 
-  vids.forEach(function (v) { io.observe(v); });
+  /* --- drive it from the scroll position --- */
+  var queued = false;
+  function onScroll() {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(function () { queued = false; ambient(); });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+      if (current) current.stop();
+      current = null; locked = null;
+    } else { ambient(); }
+  });
+
+  /* Nothing auto-plays under reduced motion, which would leave the reel as a black hole.
+     Load it without autoplay instead, so it sits there as a poster and a play button. */
+  if (reduced) {
+    var f = document.querySelector('iframe.vimeo-defer');
+    if (f && !f.src) f.src = f.dataset.src.replace('autoplay=1', 'autoplay=0');
+  }
+
+  ambient();
 })();
 </script>
 
 <script>
-/* Vimeo, deferred. The iframe has no src until it scrolls into view, so the player is
-   never even fetched until then. After that, play and pause are driven by postMessage
-   to the Vimeo player, which needs no SDK and no third-party script. */
-(function () {
-  var frames = [].slice.call(document.querySelectorAll('iframe.vimeo-defer'));
-  if (!frames.length || !('IntersectionObserver' in window)) {
-    frames.forEach(function (f) { f.src = f.dataset.src; });   // no observer, just load it
-    return;
-  }
-  function cmd(f, method) {
-    if (!f.contentWindow) return;
-    try {
-      f.contentWindow.postMessage(JSON.stringify({ method: method }), 'https://player.vimeo.com');
-    } catch (e) {}
-  }
-  var io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      var f = e.target;
-      if (e.isIntersecting && e.intersectionRatio > 0.4) {
-        if (!f.src) { f.src = f.dataset.src; }   // first time: loading it starts it
-        else { cmd(f, 'play'); }
-      } else if (f.src) {
-        cmd(f, 'pause');
-      }
-    });
-  }, { threshold: [0, 0.4, 1] });
-  frames.forEach(function (f) { io.observe(f); });
-})();
-</script>
-
-<script>
-/* Carousel auto-advance. The scrolling itself is native; this only moves it on.
-   Pauses on hover, focus and while the visitor is scrolling it themselves, and does
-   not run at all for anyone who has asked for reduced motion. */
+/* Carousel: arrows, native swipe, and a seamless loop.
+   The scrolling is native scroll-snap, so touch, momentum and keyboard all come from the
+   browser. To make it loop rather than rewind, a few panes from each end are cloned onto
+   the opposite end. Once a clone has been scrolled into, the scroll position jumps back by
+   exactly one set of real panes. The jump is invisible because the content either side of
+   it is identical, and it only happens once the scroll has settled, so it never cuts a
+   finger drag or its momentum short. */
 (function () {
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var GAP = 10;        // must match the gap in .carousel
+  var CLONES = 4;      // >= panes visible at once, plus room for a hard fling
+  var DELAY = 3600;
+
   [].forEach.call(document.querySelectorAll('.carousel'), function (el) {
-    if (reduced) return;
-    var timer = null, idle = null, paused = false;
+    var wrap = el.parentNode;
+    var real = [].slice.call(el.children);
+    var n = real.length;
+    if (n < 2) return;
 
-    function step() {
-      if (paused) return;
-      var pane = el.querySelector('.pane');
-      if (!pane) return;
-      var w = pane.getBoundingClientRect().width + 10;      // pane + gap
-      var atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 4;
-      el.scrollTo({ left: atEnd ? 0 : el.scrollLeft + w, behavior: 'smooth' });
+    function copy(node) {
+      var c = node.cloneNode(true);
+      c.setAttribute('aria-hidden', 'true');   // same picture twice, announce it once
+      return c;
     }
-    function start() { stop(); timer = setInterval(step, 3600); }
-    function stop()  { if (timer) { clearInterval(timer); timer = null; } }
+    // front gets the last CLONES panes, back gets the first CLONES, so it reads
+    // continuously in both directions
+    for (var i = 0; i < CLONES; i++) el.insertBefore(copy(real[((n - 1 - i) % n + n) % n]), el.firstChild);
+    for (var k = 0; k < CLONES; k++) el.appendChild(copy(real[k % n]));
 
-    el.addEventListener('pointerenter', function () { paused = true; });
-    el.addEventListener('pointerleave', function () { paused = false; });
-    el.addEventListener('focusin',      function () { paused = true; });
-    el.addEventListener('focusout',     function () { paused = false; });
-    // a manual scroll should not fight the timer: hold off until they stop
+    function paneW() { return real[0].getBoundingClientRect().width + GAP; }
+    var lastW = paneW();
+
+    // every snap point is a whole number of panes from 0, which makes the maths easy
+    function index() { return Math.round(el.scrollLeft / paneW()); }
+    function go(i, smooth) {
+      el.scrollTo({ left: i * paneW(), behavior: smooth ? 'smooth' : 'auto' });
+    }
+
+    /* Keep the resting position inside the real panes, [CLONES, CLONES + n). */
+    function normalise() {
+      var w = paneW(), lo = CLONES * w, hi = lo + n * w;
+      if (el.scrollLeft > hi - 2)      el.scrollLeft -= n * w;
+      else if (el.scrollLeft < lo - 2) el.scrollLeft += n * w;
+    }
+
+    go(CLONES, false);
+
+    var paused = false, timer = null, idle = null, settle = null;
+    function nudge(dir) { go(index() + dir, true); }
+
+    /* --- arrows --- */
+    [].forEach.call(wrap.querySelectorAll('.car-btn'), function (b) {
+      b.addEventListener('click', function () { nudge(b.classList.contains('prev') ? -1 : 1); });
+    });
+    wrap.classList.add('has-controls');   // they do something now, so let CSS show them
+
+    /* --- settle: normalise once the scrolling, ours or theirs, has stopped --- */
     el.addEventListener('scroll', function () {
+      clearTimeout(settle);
+      settle = setTimeout(normalise, 90);
+      // a manual scroll should not fight the timer: hold off until they stop
       paused = true;
       clearTimeout(idle);
       idle = setTimeout(function () { paused = false; }, 2500);
     }, { passive: true });
+
+    window.addEventListener('resize', function () {
+      var i = Math.round(el.scrollLeft / lastW);
+      lastW = paneW();
+      go(i, false);
+      normalise();
+    });
+
+    /* --- auto-advance. Arrows and the loop stay under reduced motion, only the timer goes --- */
+    if (reduced) return;
+    function step() { if (!paused) go(index() + 1, true); }
+    function start() { stop(); timer = setInterval(step, DELAY); }
+    function stop()  { if (timer) { clearInterval(timer); timer = null; } }
+
+    wrap.addEventListener('pointerenter', function () { paused = true; });
+    wrap.addEventListener('pointerleave', function () { paused = false; });
+    wrap.addEventListener('focusin',      function () { paused = true; });
+    wrap.addEventListener('focusout',     function () { paused = false; });
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) stop(); else start();
+    });
 
     // only run while it is actually on screen
     if ('IntersectionObserver' in window) {
