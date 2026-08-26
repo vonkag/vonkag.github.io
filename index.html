@@ -284,12 +284,35 @@
   .mata-row{
     display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:10px;
   }
-  .mata-row .pane{background:var(--card);border-radius:4px;overflow:hidden;}
+  /* margin:0 matters: the reel pane is a <figure>, and the browser default of
+     1em 40px was quietly stealing 80px of its width inside the grid track. */
+  .mata-row .pane{background:var(--card);border-radius:4px;overflow:hidden;margin:0;}
   .mata-row .shot{aspect-ratio:3/4;}
   .mata-row .reel{grid-column:1;grid-row:1/span 2;}
   .mata-row img,.mata-row video{
     width:100%;height:100%;object-fit:cover;display:block;
   }
+  /* The reel is the one clip here that came off Instagram, so it says so, on the video
+     rather than as a link in the body: Instagram is already in the footer, and clicking
+     a video on this page zooms it everywhere else. Same treatment as the tile captions.
+     pointer-events:none so the caption never swallows the click meant for the video. */
+  .mata-row .reel{position:relative;}
+  .mata-row .reel figcaption{
+    position:absolute;left:0;right:0;bottom:0;margin:0;
+    padding:24px 10px 9px;font-size:12px;color:#fff;
+    background:linear-gradient(transparent,rgba(0,0,0,.8));
+    opacity:0;transition:opacity .18s ease;pointer-events:none;
+  }
+  .mata-row .reel:hover figcaption,
+  .mata-row .reel:focus-within figcaption{opacity:1;}
+  /* no hover on touch, so leave it showing rather than never showing it at all */
+  @media (hover:none){
+    .mata-row .reel figcaption{opacity:1;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .mata-row .reel figcaption{transition:none;}
+  }
+
   /* on a phone the reel takes the full width and the frames pair up underneath it */
   @media (max-width:720px){
     .mata-row{grid-template-columns:repeat(2,1fr);}
@@ -645,27 +668,34 @@
       <!-- No webm for the reel: VP9 came out larger than the H.264 on this footage,
            and convert.sh says to ship the mp4 alone when that happens.
            The frames are lazy-loaded, being the last card on the page.
-           mata-sample.jpg has no simulation in its source filename, so its caption stays
-           generic rather than guessing at one. -->
+           Deliberately no film-stock names on these, in the captions or the filenames.
+           The simulations are inspired by those stocks rather than reproductions of them,
+           and the names are trademarks, so claiming them on a public page would be both
+           inaccurate and a needless risk. Filenames count: they are in the page source
+           and fetchable as URLs. -->
       <div class="mata-row">
-        <div class="pane reel">
+        <figure class="pane reel">
           <video class="zoomable" muted loop playsinline preload="none"
                  poster="media/mata-reel-poster.jpg">
             <source src="media/mata-reel.mp4" type="video/mp4">
           </video>
-        </div>
-        <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-acros.jpg"
-             alt="Shot on Mata, Acros simulation" data-caption="Shot on Mata, Acros simulation"></div>
-        <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-sample.jpg"
-             alt="Shot on Mata" data-caption="Shot on Mata"></div>
-        <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-ektachrome-a.jpg"
-             alt="Shot on Mata, Ektachrome 100 simulation" data-caption="Shot on Mata, Ektachrome 100 simulation"></div>
-        <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-gold.jpg"
-             alt="Shot on Mata, Gold 200 simulation" data-caption="Shot on Mata, Gold 200 simulation"></div>
-        <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-ektachrome-b.jpg"
-             alt="Shot on Mata, Ektachrome 100 simulation" data-caption="Shot on Mata, Ektachrome 100 simulation"></div>
-        <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-portra.jpg"
-             alt="Shot on Mata, Portra 400 simulation" data-caption="Shot on Mata, Portra 400 simulation"></div>
+          <!-- A figure, not a div, so this figcaption is valid markup. The lightbox reads
+               a figcaption out of the clicked element's parent, so the same line carries
+               through to the enlarged view with no extra wiring. -->
+          <figcaption>Instagram, @vonkagaoan</figcaption>
+        </figure>
+        <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-frame-1.jpg"
+             alt="Frame shot on Mata" data-caption="Shot on Mata"></div>
+        <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-frame-2.jpg"
+             alt="Frame shot on Mata" data-caption="Shot on Mata"></div>
+        <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-frame-3.jpg"
+             alt="Frame shot on Mata" data-caption="Shot on Mata"></div>
+        <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-frame-4.jpg"
+             alt="Frame shot on Mata" data-caption="Shot on Mata"></div>
+        <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-frame-5.jpg"
+             alt="Frame shot on Mata" data-caption="Shot on Mata"></div>
+        <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-frame-6.jpg"
+             alt="Frame shot on Mata" data-caption="Shot on Mata"></div>
       </div>
       <div class="body">
         <h3>Mata</h3>
@@ -673,16 +703,11 @@
         <p>
           A pocket camera with no preview screen: you do not see the picture now, you see it
           later, after develop. Custom firmware on a Seeed XIAO ESP32S3, a 5MP sensor upgrade,
-          a colour processing pipeline written from scratch, and runtime WiFi provisioning over
-          a captive portal so it can be set up without reflashing.
+          a colour processing pipeline written from scratch that grades every frame towards a
+          film look, and runtime WiFi provisioning over a captive portal so it can be set up
+          without reflashing. The enclosure is modelled and printed to suit the board.
         </p>
-        <ul class="stack"><li>C++</li><li>ESP32-S3</li><li>PlatformIO</li><li>Image pipeline</li></ul>
-        <!-- The reel is from Instagram, so it is credited. A link rather than a hover
-             overlay on the video: clicking a video should enlarge it, the way every other
-             video on this page does, not navigate off the site. -->
-        <div class="links">
-          <a href="https://instagram.com/vonkagaoan"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>@vonkagaoan</a>
-        </div>
+        <ul class="stack"><li>C++</li><li>ESP32-S3</li><li>PlatformIO</li><li>Image pipeline</li><li>Blender</li><li>3D printing</li></ul>
         <!-- Add the repo link here once matacam is public -->
       </div>
     </article>
@@ -705,8 +730,8 @@
     </p>
     <p>
       At heart I like making things, whether that is building and tinkering with something
-      physical, solving a technical or digital problem, or tackling a creative one. Most of
-      what I know came from starting things I had no idea how to finish.
+      physical, solving a technical or digital problem, or tackling a creative one. I learn
+      by doing, and I take on work that starts outside what I already know.
     </p>
   </div>
   <div class="links">
