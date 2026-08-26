@@ -144,13 +144,29 @@
     /* short fade so the marker does not snap between links as you cross a boundary */
     transition:color .15s ease,border-color .15s ease;
   }
-  nav a:hover,nav a:focus{color:var(--ink);border-bottom-color:var(--ink);}
+  /* border-bottom stays transparent and is only reserving the 2px the marker sits in */
+  nav a:hover,nav a:focus{color:var(--ink);}
   /* the section you are actually reading, set by the scrollspy below */
-  nav a.is-current{color:var(--ink);border-bottom-color:var(--ink);}
+  nav a.is-current{color:var(--ink);}
   @media (prefers-reduced-motion: reduce){
     nav a{transition:none;}
   }
-  .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;position:relative;}
+  /* One bar that slides between links, rather than an underline blinking on and off under
+     each one. Out of flow, so it does not disturb the flex row it sits in. */
+  .nav-marker{
+    position:absolute;left:0;top:0;width:0;height:2px;
+    background:var(--ink);opacity:0;pointer-events:none;
+  }
+  /* Added once it has been placed, so it does not animate in from zero width on load. */
+  .nav-marker.ready{
+    transition:transform .3s cubic-bezier(.4,0,.2,1),
+               width .3s cubic-bezier(.4,0,.2,1),
+               opacity .2s ease;
+  }
+  @media (prefers-reduced-motion: reduce){
+    .nav-marker.ready{transition:opacity .2s ease;}
+  }
   #theme-toggle{
     background:none;border:0;padding:4px;cursor:pointer;color:var(--muted);
     display:flex;align-items:center;line-height:0;border-radius:4px;
@@ -206,9 +222,15 @@
   .links a:hover{border-bottom-color:var(--ink);}
 
   /* ---------- hover-to-play thumbnail grid ---------- */
+  /* Three across, explicitly. auto-fit used to drop to two columns in the middle widths
+     and leave the third tile stranded on a row of its own, which read as a mistake. Below
+     the phone breakpoint it goes to a single stacked column rather than three slivers. */
   .tiles{
-    display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    display:grid;grid-template-columns:repeat(3,1fr);
     gap:12px;margin:0;padding:0;list-style:none;
+  }
+  @media (max-width:720px){
+    .tiles{grid-template-columns:1fr;}
   }
   .tile{
     position:relative;aspect-ratio:16/9;overflow:hidden;border-radius:4px;
@@ -379,6 +401,7 @@
       <li><a href="#hardware">Hardware</a></li>
       <li><a href="#about">About</a></li>
     </ul>
+    <span class="nav-marker" aria-hidden="true"></span>
     <button id="theme-toggle" type="button" aria-pressed="false" aria-label="Switch to dark mode">
       <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none"
            stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
@@ -616,12 +639,13 @@
   <h2>About</h2>
   <div class="about">
     <p>
-      About ten years in 3D, based in Auckland. Character animation for television to start
-      with, four years teaching it, then real-time and XR.
+      At heart I like making things, whether that is building and tinkering with something
+      physical, solving a technical or digital problem, or tackling a creative one. Most of
+      what I know came from starting things I had no idea how to finish.
     </p>
     <p>
-      On the side I like to build things: an app on the Play Store, a screenless camera
-      running its own firmware, a dashboard on a jailbroken Kindle.
+      About ten years in 3D, based in Auckland. Character animation for television
+      commercials to start with, four years teaching it, then real-time and XR.
     </p>
   </div>
   <div class="links">
@@ -641,6 +665,7 @@
    still the thing you are looking at. */
 (function () {
   var nav = document.querySelector('nav');
+  var marker = document.querySelector('.nav-marker');
   var links = [].slice.call(document.querySelectorAll('nav a[href^="#"]'));
   var items = [];
   links.forEach(function (a) {
@@ -670,14 +695,31 @@
     var bottom = window.pageYOffset + window.innerHeight;
     if (bottom >= document.documentElement.scrollHeight - 2) hit = items[items.length - 1];
 
-    if (hit === current) return;
-    current = hit;
-    items.forEach(function (it) {
-      var on = it === hit;
-      it.a.classList.toggle('is-current', on);
-      if (on) it.a.setAttribute('aria-current', 'location');
-      else it.a.removeAttribute('aria-current');
-    });
+    if (hit !== current) {
+      current = hit;
+      items.forEach(function (it) {
+        var on = it === hit;
+        it.a.classList.toggle('is-current', on);
+        if (on) it.a.setAttribute('aria-current', 'location');
+        else it.a.removeAttribute('aria-current');
+      });
+    }
+    place(hit);
+  }
+
+  /* Move the bar under whichever link is current. Runs every time, not only when the
+     current link changes, so a resize or a reflow puts it back where it belongs without
+     needing its own handler. The links are static inside .nav-inner, which is the
+     offsetParent, so their offsets can be used directly. */
+  function place(hit) {
+    if (!marker) return;
+    if (!hit) { marker.style.opacity = '0'; return; }
+    var a = hit.a;
+    // offsetHeight includes the 2px transparent border, so this lands exactly on it
+    marker.style.top = (a.offsetTop + a.offsetHeight - 2) + 'px';
+    marker.style.width = a.offsetWidth + 'px';
+    marker.style.transform = 'translateX(' + a.offsetLeft + 'px)';
+    marker.style.opacity = '1';
   }
 
   var queued = false;
@@ -692,7 +734,13 @@
   // and section tops move anyway as the posters and the embed take up their space.
   window.addEventListener('load', sync);
   window.addEventListener('hashchange', sync);
+
   sync();
+  // Only now let it animate, so the first placement is not a bar growing out of the corner.
+  if (marker) {
+    void marker.offsetWidth;          // flush the placement before the transition exists
+    marker.classList.add('ready');
+  }
 })();
 </script>
 
