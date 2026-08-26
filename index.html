@@ -6,6 +6,10 @@
 <title>Von Kagaoan</title>
 <meta name="description" content="Real-time 3D, software and hardware. Auckland, New Zealand.">
 
+<!-- Fetched in parallel with the CSS instead of after it. crossorigin is required on font
+     preloads even for same-origin files, or the browser fetches them twice. -->
+<link rel="preload" href="fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+
 <!-- Open Graph: controls how the link previews when pasted into an email or a chat.
      Replace the og:image with a real 1200x630 jpg once you have one. -->
 <meta property="og:title" content="Von Kagaoan">
@@ -72,7 +76,7 @@
   header{padding:64px 0 26px;}
   h1{
     font-size:clamp(28px,5vw,44px);
-    letter-spacing:.10em;font-weight:700;text-transform:uppercase;
+    letter-spacing:.06em;font-weight:650;text-transform:uppercase;
     margin:0 0 6px;
   }
   .role{color:var(--muted);margin:0 0 14px;font-size:clamp(15px,2vw,17px);}
