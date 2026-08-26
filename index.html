@@ -141,8 +141,15 @@
     text-decoration:none;font-size:12px;font-weight:700;
     text-transform:uppercase;letter-spacing:.14em;color:var(--muted);
     padding-bottom:2px;border-bottom:2px solid transparent;
+    /* short fade so the marker does not snap between links as you cross a boundary */
+    transition:color .15s ease,border-color .15s ease;
   }
   nav a:hover,nav a:focus{color:var(--ink);border-bottom-color:var(--ink);}
+  /* the section you are actually reading, set by the scrollspy below */
+  nav a.is-current{color:var(--ink);border-bottom-color:var(--ink);}
+  @media (prefers-reduced-motion: reduce){
+    nav a{transition:none;}
+  }
   .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;}
   #theme-toggle{
     background:none;border:0;padding:4px;cursor:pointer;color:var(--muted);
@@ -491,10 +498,11 @@
     <!-- PATTERN for a self-hosted silent loop. Duplicate per project. muted + playsinline
          are required or autoplay fails on Chrome and iOS. No class needed: the coordinator
          picks up every <video> inside a .card. -->
-    <!-- Deliberately LAST and deliberately DATED. This cut is from Jan 2023, so it predates
-         SkillsVR and GeneXR entirely and shows character animation rather than real-time.
-         Undated and at the top it would read as current work and undersell the last three
-         years. Replace the hero slot with a real-time cut once the GeneXR capture is done. -->
+    <!-- Deliberately LAST. This cut is from Jan 2023, so it predates SkillsVR and GeneXR
+         entirely and shows character animation rather than real-time. The year was on the
+         kicker and came off 2026-08-27: last position and the words "character animation"
+         already place it, and a date on this one card alone read like an apology for it.
+         Replace the hero slot with a real-time cut once the GeneXR capture is done. -->
     <article class="card feature">
       <div class="embed">
         <!-- No src attribute: the player is not loaded, and therefore cannot start
@@ -503,11 +511,11 @@
         <iframe class="vimeo-defer"
                 data-src="https://player.vimeo.com/video/792897249?title=0&amp;byline=0&amp;portrait=0&amp;autoplay=1&amp;muted=1&amp;loop=1"
                 allow="autoplay; fullscreen; picture-in-picture" allowfullscreen
-                title="Von Kagaoan animation reel, 2023"></iframe>
+                title="Von Kagaoan character animation reel"></iframe>
       </div>
       <div class="body">
         <h3>Animation reel</h3>
-        <p class="kicker">2023 · character animation</p>
+        <p class="kicker">Character animation</p>
       </div>
     </article>
 
@@ -539,10 +547,13 @@
                alt="TallyToo, shared tallies" data-caption="TallyToo, shared tallies"></div>
           <div class="pane"><img class="zoomable" src="media/tallytoo-05.jpg"
                alt="TallyToo, creating a tally" data-caption="TallyToo, creating a tally"></div>
-          <div class="pane"><img class="zoomable" src="media/tallytoo-06.jpg"
-               alt="TallyToo, themes" data-caption="TallyToo, themes"></div>
+          <!-- 07 then 06, not 06 then 07: one tilted phone runs across the seam between
+               these two, dark on the left half and Manila on the right. Reordering them
+               breaks the join. -->
           <div class="pane"><img class="zoomable" src="media/tallytoo-07.jpg"
                alt="TallyToo, dark mode" data-caption="TallyToo, dark mode"></div>
+          <div class="pane"><img class="zoomable" src="media/tallytoo-06.jpg"
+               alt="TallyToo, themes" data-caption="TallyToo, themes"></div>
         </div>
         <button class="car-btn prev" type="button" aria-label="Previous screenshot">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
@@ -621,6 +632,69 @@
 </section>
 </div>
 
+
+<script>
+/* Scrollspy: underline the nav link for whatever section you are reading.
+   Position-based rather than IntersectionObserver, because what matters is which heading
+   you have most recently scrolled past, not how much of a section happens to be visible.
+   A short section sandwiched between two tall ones never wins on visible area, but it is
+   still the thing you are looking at. */
+(function () {
+  var nav = document.querySelector('nav');
+  var links = [].slice.call(document.querySelectorAll('nav a[href^="#"]'));
+  var items = [];
+  links.forEach(function (a) {
+    var el = document.querySelector(a.getAttribute('href'));
+    if (el) items.push({ a: a, el: el });
+  });
+  if (!items.length) return;
+
+  var current;
+
+  /* Where an anchor jump parks a section, from section{scroll-margin-top}. Read rather
+     than hardcoded so the two cannot drift apart. It is taller than the stuck nav, so
+     measuring from the nav alone left a section deep-linked to sitting just under the
+     line, and the PREVIOUS link stayed marked after clicking through. */
+  var park = parseFloat(getComputedStyle(items[0].el).scrollMarginTop) || 0;
+
+  function sync() {
+    // the sticky nav covers the top of the page, so measure from its underside, but never
+    // above where an anchored section comes to rest
+    var line = Math.max(nav ? nav.getBoundingClientRect().bottom : 0, park) + 2;
+    var hit = null;
+    items.forEach(function (it) {
+      if (it.el.getBoundingClientRect().top <= line) hit = it;   // last one past the line
+    });
+    // The final section is short enough that its top may never reach the line on a tall
+    // screen, so hand it the marker once there is nothing left to scroll.
+    var bottom = window.pageYOffset + window.innerHeight;
+    if (bottom >= document.documentElement.scrollHeight - 2) hit = items[items.length - 1];
+
+    if (hit === current) return;
+    current = hit;
+    items.forEach(function (it) {
+      var on = it === hit;
+      it.a.classList.toggle('is-current', on);
+      if (on) it.a.setAttribute('aria-current', 'location');
+      else it.a.removeAttribute('aria-current');
+    });
+  }
+
+  var queued = false;
+  function onScroll() {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(function () { queued = false; sync(); });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  // Not only on scroll: a deep link scrolls the page after this script has already run,
+  // and section tops move anyway as the posters and the embed take up their space.
+  window.addEventListener('load', sync);
+  window.addEventListener('hashchange', sync);
+  sync();
+})();
+</script>
 
 <script>
 /* Theme toggle. Button label shows the mode you would switch TO. */
