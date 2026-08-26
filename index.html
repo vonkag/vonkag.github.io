@@ -196,11 +196,11 @@
      and it needs no library. */
   dialog#lightbox{
     border:0;padding:0;background:transparent;max-width:96vw;max-height:96vh;
-    width:min(1400px,96vw);
+    width:min(960px,92vw);
   }
   dialog#lightbox::backdrop{background:rgba(0,0,0,.9);}
   #lightbox-content img,#lightbox-content video{
-    width:100%;height:auto;max-height:92vh;object-fit:contain;display:block;border-radius:4px;
+    width:100%;height:auto;max-height:82vh;object-fit:contain;display:block;border-radius:4px;
   }
   #lightbox-close{
     position:fixed;top:16px;right:20px;z-index:2;
@@ -301,19 +301,19 @@
     <article class="card feature">
     <ul class="tiles">
       <li class="tile" tabindex="0">
-        <video muted loop playsinline preload="none" poster="media/m1-platform-overview-poster.jpg">
+        <video class="zoomable" muted loop playsinline preload="none" poster="media/m1-platform-overview-poster.jpg">
           <source src="media/m1-platform-overview.mp4" type="video/mp4">
         </video>
         <figcaption>Construction site, elevated platform</figcaption>
       </li>
       <li class="tile" tabindex="0">
-        <video muted loop playsinline preload="none" poster="media/m2-residential-build-poster.jpg">
+        <video class="zoomable" muted loop playsinline preload="none" poster="media/m2-residential-build-poster.jpg">
           <source src="media/m2-residential-build.mp4" type="video/mp4">
         </video>
         <figcaption>Residential build, exterior and interior</figcaption>
       </li>
       <li class="tile" tabindex="0">
-        <video muted loop playsinline preload="none" poster="media/m3-roadworks-poster.jpg">
+        <video class="zoomable" muted loop playsinline preload="none" poster="media/m3-roadworks-poster.jpg">
           <source src="media/m3-roadworks.mp4" type="video/mp4">
         </video>
         <figcaption>Roadworks and traffic management</figcaption>
@@ -638,8 +638,15 @@
     if (el) {
       var big = el.cloneNode(true);
       big.classList.remove('zoomable');
-      big.removeAttribute('poster');
-      if (big.tagName === 'VIDEO') { big.controls = true; big.autoplay = true; big.loop = true; }
+      if (big.tagName === 'VIDEO') {
+        // no controls: these are silent loops, so a scrub bar is chrome with nothing to do.
+        // muted set as a property, not just an attribute, or autoplay is refused.
+        big.controls = false;
+        big.muted = true;
+        big.autoplay = true;
+        big.loop = true;
+        big.setAttribute('preload', 'auto');
+      }
       box.replaceChildren(big);
       dlg.showModal();
       return;
