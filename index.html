@@ -365,6 +365,27 @@
     </article>
 
     <article class="card feature">
+      <div class="media">
+        <!-- No autoplay attribute on purpose. That would force the 2.7MB down for every
+             visitor whether they reach it or not. The script starts it when it scrolls
+             into view instead. muted is required or the browser refuses to play;
+             controls let them unmute. -->
+        <video class="play-in-view" controls muted loop playsinline preload="none"
+               poster="media/telco-rebrand-poster.jpg">
+          <source src="media/telco-rebrand.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="body">
+        <h3>Rebrandable retail environment</h3>
+        <!-- "brands shown are mock-ups" stays. Without it a viewer can reasonably assume
+             these were real telco clients. That is the one thing the video cannot say
+             for itself. -->
+        <p class="kicker">VR environment · brands shown are mock-ups</p>
+        <ul class="stack"><li>Unity</li><li>Environment art</li><li>Real-time</li><li>Lighting</li></ul>
+      </div>
+    </article>
+
+    <article class="card feature">
       <div class="portrait-row">
         <div class="pane">
           <video class="play-in-view zoomable" muted loop playsinline preload="none"
@@ -389,30 +410,6 @@
         <h3>MX Mechanical Mini</h3>
         <p class="kicker">Personal work · final render, breakdown, wireframe</p>
         <ul class="stack"><li>Blender</li><li>Modelling</li><li>Materials</li><li>Lighting</li></ul>
-      </div>
-    </article>
-
-    <!-- Self-hosted, no third party. 2.7MB, and preload="none" means nothing downloads
-         until the visitor actually presses play. The webm was dropped: on a wipe this
-         busy, VP9 came out larger than x264. -->
-    <article class="card feature">
-      <div class="media">
-        <!-- No autoplay attribute on purpose. That would force the 2.7MB down for every
-             visitor whether they reach it or not. The script starts it when it scrolls
-             into view instead. muted is required or the browser refuses to play;
-             controls let them unmute. -->
-        <video class="play-in-view" controls muted loop playsinline preload="none"
-               poster="media/telco-rebrand-poster.jpg">
-          <source src="media/telco-rebrand.mp4" type="video/mp4">
-        </video>
-      </div>
-      <div class="body">
-        <h3>Rebrandable retail environment</h3>
-        <!-- "brands shown are mock-ups" stays. Without it a viewer can reasonably assume
-             these were real telco clients. That is the one thing the video cannot say
-             for itself. -->
-        <p class="kicker">VR environment · brands shown are mock-ups</p>
-        <ul class="stack"><li>Unity</li><li>Environment art</li><li>Real-time</li><li>Lighting</li></ul>
       </div>
     </article>
 
