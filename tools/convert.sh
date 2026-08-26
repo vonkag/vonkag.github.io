@@ -33,8 +33,12 @@ TRIM=()
 [ -n "$DUR" ]   && TRIM+=(-t "$DUR")
 
 # 1280 wide is plenty for a portfolio tile and roughly quarters the file against 1080p.
-# -2 keeps height even, which H.264 requires.
-SCALE="scale=1280:-2"
+# -2 keeps the other side even, which H.264 requires.
+#
+# Portrait sources need the cap on the OTHER axis, or a 9:16 clip comes out 1280x2276,
+# many times the pixels its pane will ever show. Override it the same way as FF:
+#   SCALE="scale=-2:1280" ./tools/convert.sh loop "in.mp4" name
+SCALE="${SCALE:-scale=1280:-2}"
 
 case "$MODE" in
   loop)    FPS=30; AUDIO=(-an);                             CRF264=28; CRFVP9=33 ;;

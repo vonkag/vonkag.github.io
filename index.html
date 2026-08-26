@@ -275,6 +275,27 @@
     width:100%;height:100%;object-fit:cover;display:block;
   }
 
+  /* ---------- Mata row ----------
+     The one card where everything is vertical: the reel is 9:16 and every frame off the
+     camera is 3:4. The reel gets a column to itself and spans both rows of the frames, so
+     the block ends flush rather than leaving one column short. Every track is fr, so the
+     whole thing scales together and the crop on the video stays put at under a tenth of
+     its width instead of drifting with the viewport. */
+  .mata-row{
+    display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:10px;
+  }
+  .mata-row .pane{background:var(--card);border-radius:4px;overflow:hidden;}
+  .mata-row .shot{aspect-ratio:3/4;}
+  .mata-row .reel{grid-column:1;grid-row:1/span 2;}
+  .mata-row img,.mata-row video{
+    width:100%;height:100%;object-fit:cover;display:block;
+  }
+  /* on a phone the reel takes the full width and the frames pair up underneath it */
+  @media (max-width:720px){
+    .mata-row{grid-template-columns:repeat(2,1fr);}
+    .mata-row .reel{grid-column:1/-1;grid-row:auto;aspect-ratio:9/16;}
+  }
+
   /* triptych is 1260x746, a touch wider than 16:9, so contain rather than crop the
      outer panes off */
   .fit-contain video,.fit-contain img{object-fit:contain;}
@@ -621,7 +642,29 @@
   <div class="grid">
 
     <article class="card feature">
-      <div class="media">Camera photo or sample gallery goes here</div>
+      <!-- No webm for the reel: VP9 came out larger than the H.264 on this footage,
+           and convert.sh says to ship the mp4 alone when that happens.
+           The frames are lazy-loaded, being the last card on the page. -->
+      <div class="mata-row">
+        <div class="pane reel">
+          <video class="zoomable" muted loop playsinline preload="none"
+                 poster="media/mata-reel-poster.jpg">
+            <source src="media/mata-reel.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-acros.jpg"
+             alt="Mata sample, Acros simulation" data-caption="Mata sample, Acros simulation"></div>
+        <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-gold-a.jpg"
+             alt="Mata sample, the same frame in Gold 200" data-caption="Mata sample, the same frame in Gold 200"></div>
+        <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-ektachrome-a.jpg"
+             alt="Mata sample, Ektachrome 100" data-caption="Mata sample, Ektachrome 100"></div>
+        <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-gold-b.jpg"
+             alt="Mata sample, Gold 200" data-caption="Mata sample, Gold 200"></div>
+        <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-ektachrome-b.jpg"
+             alt="Mata sample, Ektachrome 100" data-caption="Mata sample, Ektachrome 100"></div>
+        <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-portra.jpg"
+             alt="Mata sample, Portra 400" data-caption="Mata sample, Portra 400"></div>
+      </div>
       <div class="body">
         <h3>Mata</h3>
         <p class="kicker">Screenless film-look digital camera</p>
@@ -645,14 +688,17 @@
 <section id="about">
   <h2>About</h2>
   <div class="about">
+    <!-- Facts first, disposition second. Under a heading that already says About, the
+         old opening word "About" was doing a different job (approximately) and read as a
+         stutter, so it is "Roughly" now. -->
+    <p>
+      Roughly ten years in 3D, based in Auckland. Character animation for television
+      commercials to start with, four years teaching it, then real-time and XR.
+    </p>
     <p>
       At heart I like making things, whether that is building and tinkering with something
       physical, solving a technical or digital problem, or tackling a creative one. Most of
       what I know came from starting things I had no idea how to finish.
-    </p>
-    <p>
-      About ten years in 3D, based in Auckland. Character animation for television
-      commercials to start with, four years teaching it, then real-time and XR.
     </p>
   </div>
   <div class="links">
@@ -862,7 +908,7 @@
       players: players,
       tiles: tiles,
       // measure the media, not the whole card, or the text under it drags the centre down
-      box: card.querySelector('.tiles,.portrait-row,.embed,.media') || card,
+      box: card.querySelector('.tiles,.portrait-row,.mata-row,.embed,.media') || card,
       // a full-width piece should have the page's attention before it starts; a small
       // tile only needs to be properly on screen
       needs: tiles ? 0.6 : 0.92,
