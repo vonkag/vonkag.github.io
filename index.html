@@ -48,7 +48,7 @@
   a{color:inherit;}
 
   /* ---------- header ---------- */
-  header{padding:64px 0 28px;border-bottom:2px solid var(--ink);}
+  header{padding:64px 0 26px;}
   h1{
     font-size:clamp(28px,5vw,44px);
     letter-spacing:.10em;font-weight:700;text-transform:uppercase;
@@ -95,7 +95,7 @@
     font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.16em;
     color:var(--muted);margin:0 0 8px;
   }
-  .section-intro{margin:0 0 32px;max-width:60ch;color:var(--muted);}
+  .section-intro{margin:0 0 32px;max-width:60ch;}
   .about p{max-width:60ch;margin:0 0 16px;}
 
   /* ---------- project cards ---------- */
@@ -119,8 +119,8 @@
   }
   .stack li + li::before{content:"·";padding:0 8px;opacity:.55;}
   .links{display:flex;flex-wrap:wrap;gap:16px;font-size:14px;}
-  .links a{text-decoration:none;border-bottom:1px solid var(--ink);padding-bottom:1px;}
-  .links a:hover{opacity:.6;}
+  .links a{text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:1px;}
+  .links a:hover{border-bottom-color:var(--ink);}
 
   /* ---------- hover-to-play thumbnail grid ---------- */
   .tiles{
@@ -178,13 +178,16 @@
 <div class="wrap">
   <header>
     <h1>Von Kagaoan</h1>
+    <!-- Subtitle and contact removed 2026-08-26. The subtitle repeated the nav word for
+         word, and contact at the top is a CV convention; it lives in About instead.
+         The .role and .meta styles are kept, so uncommenting this restores it as-is.
     <p class="role">Real-time 3D, software and hardware. Auckland, New Zealand.</p>
     <div class="meta">
       <a href="mailto:vonkagaoan@gmail.com">vonkagaoan@gmail.com</a>
       <span class="sep">·</span>
-      <!-- <a href="https://github.com/vonkag">GitHub</a><span class="sep">·</span> -->
       <a href="https://instagram.com/vonkagaoan">Instagram</a>
     </div>
+    -->
   </header>
 </div>
 
