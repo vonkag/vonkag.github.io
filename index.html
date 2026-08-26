@@ -173,6 +173,19 @@
     color:var(--muted);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
   }
 
+  /* ---------- portrait row ----------
+     The keyboard work was all cut vertical for Instagram (3:4 and 9:16). Rather than
+     crop it into a 16:9 hole, three 3:4 panels sit side by side and fill the width. */
+  .portrait-row{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;
+  }
+  .portrait-row .pane{
+    aspect-ratio:3/4;background:var(--card);border-radius:4px;overflow:hidden;
+  }
+  .portrait-row img,.portrait-row video{
+    width:100%;height:100%;object-fit:cover;display:block;
+  }
+
   /* full-width feature card, use for the reel */
   .feature{grid-column:1/-1;}
   .feature .media{aspect-ratio:16/9;background:#000;}
@@ -247,8 +260,8 @@
 <section id="realtime">
   <h2>3D</h2>
   <p class="section-intro">
-    Building and lighting scenes that render live, hold framerate, and read correctly
-    through a moving camera.
+    Real-time environments that have to hold framerate in a headset, and rendered work
+    where the frame itself is the deliverable.
   </p>
 
   <!-- ========== HOVER-TO-PLAY GRID ==========
@@ -274,6 +287,24 @@
   </ul>
 
   <div class="grid">
+
+    <article class="card feature">
+      <div class="portrait-row">
+        <div class="pane">
+          <video class="play-in-view" muted loop playsinline preload="none"
+                 poster="media/mx-breakdown-poster.jpg">
+            <source src="media/mx-breakdown.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="pane"><img src="media/mx-beauty.jpg" alt="Final render of the keyboard on a desk"></div>
+        <div class="pane"><img src="media/mx-wire.jpg" alt="Wireframe pass of the same shot"></div>
+      </div>
+      <div class="body">
+        <h3>MX Mechanical Mini</h3>
+        <p class="kicker">Personal work · modelled, lit and rendered</p>
+        <ul class="stack"><li>Blender</li><li>Modelling</li><li>Materials</li><li>Lighting</li></ul>
+      </div>
+    </article>
 
     <!-- Self-hosted, no third party. 2.7MB, and preload="none" means nothing downloads
          until the visitor actually presses play. The webm was dropped: on a wipe this
