@@ -200,7 +200,23 @@
   }
   dialog#lightbox::backdrop{background:rgba(0,0,0,.9);}
   #lightbox-content img,#lightbox-content video{
-    width:100%;height:auto;max-height:82vh;object-fit:contain;display:block;border-radius:4px;
+    width:100%;height:auto;max-height:78vh;object-fit:contain;display:block;border-radius:4px;
+  }
+  #lightbox-caption{
+    color:#e6e6e6;font-size:13px;text-align:center;
+    margin:12px auto 0;max-width:60ch;
+  }
+  #lightbox-caption:empty{display:none;}
+
+  /* Open only. Closing a <dialog> is synchronous, and animating it out needs
+     allow-discrete plus @starting-style, which is more moving parts than a 180ms
+     fade is worth. */
+  dialog#lightbox[open]{animation:lb-in .18s cubic-bezier(.2,.7,.3,1);}
+  dialog#lightbox[open]::backdrop{animation:lb-fade .18s ease-out;}
+  @keyframes lb-in{from{opacity:0;transform:scale(.96);}to{opacity:1;transform:none;}}
+  @keyframes lb-fade{from{opacity:0;}to{opacity:1;}}
+  @media (prefers-reduced-motion: reduce){
+    dialog#lightbox[open],dialog#lightbox[open]::backdrop{animation:none;}
   }
   #lightbox-close{
     position:fixed;top:16px;right:20px;z-index:2;
@@ -330,18 +346,21 @@
       <div class="portrait-row">
         <div class="pane">
           <video class="play-in-view zoomable" muted loop playsinline preload="none"
-                 poster="media/mx-final-poster.jpg">
+                 poster="media/mx-final-poster.jpg"
+                 data-caption="MX Mechanical Mini, final render">
             <source src="media/mx-final.mp4" type="video/mp4">
           </video>
         </div>
         <div class="pane">
           <video class="play-in-view zoomable" muted loop playsinline preload="none"
-                 poster="media/mx-breakdown-poster.jpg">
+                 poster="media/mx-breakdown-poster.jpg"
+                 data-caption="MX Mechanical Mini, breakdown from wireframe to final">
             <source src="media/mx-breakdown.mp4" type="video/mp4">
           </video>
         </div>
         <div class="pane">
-          <img class="zoomable" src="media/mx-wire.jpg" alt="Wireframe pass of the keyboard scene">
+          <img class="zoomable" src="media/mx-wire.jpg" alt="Wireframe pass of the keyboard scene"
+               data-caption="MX Mechanical Mini, wireframe pass">
         </div>
       </div>
       <div class="body">
@@ -623,6 +642,7 @@
 <dialog id="lightbox">
   <button id="lightbox-close" type="button" aria-label="Close">&times;</button>
   <div id="lightbox-content"></div>
+  <p id="lightbox-caption"></p>
 </dialog>
 
 <script>
@@ -632,6 +652,7 @@
   var dlg = document.getElementById('lightbox');
   if (!dlg || !dlg.showModal) return;
   var box = document.getElementById('lightbox-content');
+  var cap = document.getElementById('lightbox-caption');
 
   document.addEventListener('click', function (e) {
     var el = e.target.closest('.zoomable');
@@ -648,6 +669,9 @@
         big.setAttribute('preload', 'auto');
       }
       box.replaceChildren(big);
+      // explicit data-caption wins; tiles fall back to their own figcaption
+      var fig = el.parentNode && el.parentNode.querySelector('figcaption');
+      cap.textContent = el.dataset.caption || (fig ? fig.textContent.trim() : '');
       dlg.showModal();
       return;
     }
@@ -655,7 +679,7 @@
     if (e.target === dlg || e.target.id === 'lightbox-close') dlg.close();
   });
 
-  dlg.addEventListener('close', function () { box.replaceChildren(); });
+  dlg.addEventListener('close', function () { box.replaceChildren(); cap.textContent = ''; });
 })();
 </script>
 
