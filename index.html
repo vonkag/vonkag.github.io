@@ -22,14 +22,15 @@
     --card:#fafafa;
     --maxw:1080px;
   }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --ink:#ededed;
-      --muted:#9a9a9a;
-      --rule:#2a2a2a;
-      --bg:#0f0f0f;
-      --card:#171717;
-    }
+  /* Light is the default for everyone, regardless of OS setting. Dark is opt-in via the
+     toggle and persists in localStorage. Deliberate: the site is designed light and the
+     visitor chooses otherwise, rather than their laptop choosing for them. */
+  :root[data-theme="dark"]{
+    --ink:#ededed;
+    --muted:#9a9a9a;
+    --rule:#2a2a2a;
+    --bg:#0f0f0f;
+    --card:#171717;
   }
 
   *{box-sizing:border-box;}
@@ -73,6 +74,14 @@
     padding-bottom:2px;border-bottom:2px solid transparent;
   }
   nav a:hover,nav a:focus{color:var(--ink);border-bottom-color:var(--ink);}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;}
+  #theme-toggle{
+    background:none;border:0;padding:2px 0;cursor:pointer;color:var(--muted);
+    font-family:inherit;font-size:12px;font-weight:700;
+    text-transform:uppercase;letter-spacing:.14em;
+    border-bottom:2px solid transparent;white-space:nowrap;
+  }
+  #theme-toggle:hover,#theme-toggle:focus-visible{color:var(--ink);border-bottom-color:var(--ink);}
 
   /* ---------- sections ---------- */
   section{padding:56px 0;border-bottom:1px solid var(--rule);}
@@ -150,6 +159,16 @@
     video[autoplay]{display:none;}
   }
 </style>
+<script>
+  /* Must run before first paint, otherwise a returning dark-mode visitor gets a white
+     flash while the rest of the page loads. Wrapped in try/catch because localStorage
+     throws outright in some privacy modes. */
+  try {
+    if (localStorage.getItem('theme') === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  } catch (e) {}
+</script>
 </head>
 <body>
 
@@ -168,13 +187,15 @@
 </div>
 
 <nav>
-  <div class="wrap">
+  <div class="wrap nav-inner">
     <ul>
       <li><a href="#realtime">Real-time &amp; 3D</a></li>
       <li><a href="#software">Software</a></li>
       <li><a href="#hardware">Hardware</a></li>
       <li><a href="#about">About</a></li>
     </ul>
+    <button id="theme-toggle" type="button" aria-pressed="false"
+            aria-label="Switch to dark mode">Dark</button>
   </div>
 </nav>
 
@@ -209,12 +230,6 @@
     </li>
     -->
 
-    <li class="tile tile-empty">Shot 01</li>
-    <li class="tile tile-empty">Shot 02</li>
-    <li class="tile tile-empty">Shot 03</li>
-    <li class="tile tile-empty">Shot 04</li>
-    <li class="tile tile-empty">Shot 05</li>
-    <li class="tile tile-empty">Shot 06</li>
   </ul>
 
   <div class="grid">
@@ -230,13 +245,10 @@
       </div>
       <div class="body">
         <h3>Rebrandable retail environment</h3>
-        <p class="kicker">VR environment · client demo piece</p>
-        <p>
-          A retail store environment built so the entire space could be reskinned to a
-          customer's branding. The clip wipes between four variations of the same scene,
-          made to show prospective clients what their own branded VR experience would look
-          like. Brands shown are mock-ups.
-        </p>
+        <!-- "brands shown are mock-ups" stays. Without it a viewer can reasonably assume
+             these were real telco clients. That is the one thing the video cannot say
+             for itself. -->
+        <p class="kicker">VR environment · brands shown are mock-ups</p>
         <ul class="stack"><li>Unity</li><li>Environment art</li><li>Real-time</li><li>Lighting</li></ul>
       </div>
     </article>
@@ -303,10 +315,6 @@
       <div class="body">
         <h3>Animation reel</h3>
         <p class="kicker">2023 · character animation</p>
-        <p>
-          Earlier work, cut before the move into real-time. Includes the Flux commercial
-          animation above.
-        </p>
       </div>
     </article>
 
@@ -417,6 +425,30 @@
 </div>
 
 <script>
+/* Theme toggle. Button label shows the mode you would switch TO. */
+(function () {
+  var btn = document.getElementById('theme-toggle');
+  if (!btn) return;
+  var root = document.documentElement;
+
+  function sync() {
+    var dark = root.getAttribute('data-theme') === 'dark';
+    btn.textContent = dark ? 'Light' : 'Dark';
+    btn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+    btn.setAttribute('aria-pressed', String(dark));
+  }
+
+  btn.addEventListener('click', function () {
+    var dark = root.getAttribute('data-theme') === 'dark';
+    if (dark) { root.removeAttribute('data-theme'); }
+    else       { root.setAttribute('data-theme', 'dark'); }
+    try { localStorage.setItem('theme', dark ? 'light' : 'dark'); } catch (e) {}
+    sync();
+  });
+
+  sync();
+})();
+
 /* Hover-to-play for the thumbnail grid.
    Desktop: play on hover or keyboard focus, reset on leave.
    Touch:   there is no hover, so play whichever tile is actually on screen. */
