@@ -1,7 +1,7 @@
 # vonkagaoan.com
 
 Personal portfolio. Plain HTML and CSS, no build step, no dependencies.
-Hosted on GitHub Pages from the `vonimatic` account.
+Hosted on GitHub Pages from the `vonkag` account.
 
 ## Why it is built this way
 
@@ -20,11 +20,11 @@ Hosted on GitHub Pages from the `vonimatic` account.
 git init
 git add -A
 git commit -m "Initial portfolio"
-gh repo create vonimatic/vonimatic.github.io --public --source=. --push
+gh repo create vonkag/vonkag.github.io --public --source=. --push
 ```
 
-Named `vonimatic.github.io` so it serves from the root rather than `/reponame`.
-Pages then goes live at `https://vonimatic.github.io` with no configuration.
+Named `vonkag.github.io` so it serves from the root rather than `/reponame`.
+Pages then goes live at `https://vonkag.github.io` with no configuration.
 
 ### Custom domain
 
@@ -66,10 +66,12 @@ videos and possible ads. Uncomment the iframe in `index.html` and drop the video
 
 ## Before it goes live
 
-- [ ] Make `voniikag/cv` **private**. It is a live 2023 Pages site that says Von currently
-      works at Yoobee, omits SkillsVR and GeneXR, and rates Python at one star
-- [ ] Turn on *Include private contributions on my profile* in `vonimatic` settings, so the
-      profile does not look dormant when every repo is private
+- [x] Make `voniikag/cv` private. Done 2026-08-26. It was a live 2023 Pages site saying Von
+      currently worked at Yoobee, omitting SkillsVR and GeneXR, rating Python at one star
+- [ ] Add lvkagaoan@gmail.com as a secondary email on `vonkag`, so it matches the CV
+- [ ] Note: `vonkag` is a fresh account, so the contribution graph will be empty apart from
+      this repo. The commit history lives on `vonimatic` and `voniikag`. That is fine, the site
+      is the artifact, not the graph. If `matacam` ever goes public, transfer it here
 - [ ] Replace the placeholder cards with real captured media
 - [ ] Add a 1200x630 `og:image` so pasted links preview properly
 
