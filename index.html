@@ -14,6 +14,26 @@
 <!-- <meta property="og:image" content="https://vonkagaoan.com/media/og.jpg"> -->
 
 <style>
+  /* Inter, self-hosted. SIL Open Font License, so shipping the files here is fine.
+     Variable weight axis so one file covers 400 to 800. latin + latin-ext only;
+     latin-ext is what carries the macrons. */
+  @font-face{
+    font-family:'Inter';
+    font-style:normal;
+    font-weight:400 800;
+    font-display:swap;
+    src:url('fonts/inter-latin-ext.woff2') format('woff2');
+    unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  @font-face{
+    font-family:'Inter';
+    font-style:normal;
+    font-weight:400 800;
+    font-display:swap;
+    src:url('fonts/inter-latin.woff2') format('woff2');
+    unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+
   :root{
     --ink:#141414;
     --muted:#5c5c5c;
@@ -37,7 +57,8 @@
   html{scroll-behavior:smooth;}
   body{
     margin:0;
-    font-family:"Helvetica Neue",Helvetica,Arial,"Segoe UI",sans-serif;
+    font-family:'Inter','Segoe UI Variable Display','Segoe UI',system-ui,sans-serif;
+    font-optical-sizing:auto;
     color:var(--ink);
     background:var(--bg);
     font-size:16px;
@@ -194,7 +215,7 @@
 <nav>
   <div class="wrap nav-inner">
     <ul>
-      <li><a href="#realtime">Real-time &amp; 3D</a></li>
+      <li><a href="#realtime">3D</a></li>
       <li><a href="#software">Software</a></li>
       <li><a href="#hardware">Hardware</a></li>
       <li><a href="#about">About</a></li>
@@ -216,11 +237,11 @@
 </nav>
 
 <!-- ============================================================
-     REAL-TIME & 3D  ->  link the 3D CV at vonkagaoan.com/#realtime
+     3D  ->  link the 3D CV at vonkagaoan.com/#realtime (id kept, label shortened)
 ============================================================ -->
 <div class="wrap">
 <section id="realtime">
-  <h2>Real-time &amp; 3D</h2>
+  <h2>3D</h2>
   <p class="section-intro">
     Ten years across broadcast, VR training and XR production. Building and lighting scenes
     that render live, hold framerate, and read correctly through a moving camera.
