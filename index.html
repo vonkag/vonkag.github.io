@@ -186,6 +186,29 @@
     width:100%;height:100%;object-fit:cover;display:block;
   }
 
+  /* triptych is 1260x746, a touch wider than 16:9, so contain rather than crop the
+     outer panes off */
+  .fit-contain video,.fit-contain img{object-fit:contain;}
+  .zoomable{cursor:zoom-in;}
+
+  /* ---------- lightbox ----------
+     Native <dialog>: ESC and backdrop dismissal come free, focus is trapped for us,
+     and it needs no library. */
+  dialog#lightbox{
+    border:0;padding:0;background:transparent;max-width:96vw;max-height:96vh;
+    width:min(1400px,96vw);
+  }
+  dialog#lightbox::backdrop{background:rgba(0,0,0,.9);}
+  #lightbox-content img,#lightbox-content video{
+    width:100%;height:auto;max-height:92vh;object-fit:contain;display:block;border-radius:4px;
+  }
+  #lightbox-close{
+    position:fixed;top:16px;right:20px;z-index:2;
+    background:none;border:0;color:#fff;font-size:32px;line-height:1;
+    cursor:pointer;padding:6px 10px;opacity:.75;
+  }
+  #lightbox-close:hover,#lightbox-close:focus-visible{opacity:1;}
+
   /* full-width feature card, use for the reel */
   .feature{grid-column:1/-1;}
   .feature .media{aspect-ratio:16/9;background:#000;}
@@ -289,19 +312,15 @@
   <div class="grid">
 
     <article class="card feature">
-      <div class="portrait-row">
-        <div class="pane">
-          <video class="play-in-view" muted loop playsinline preload="none"
-                 poster="media/mx-breakdown-poster.jpg">
-            <source src="media/mx-breakdown.mp4" type="video/mp4">
-          </video>
-        </div>
-        <div class="pane"><img src="media/mx-beauty.jpg" alt="Final render of the keyboard on a desk"></div>
-        <div class="pane"><img src="media/mx-wire.jpg" alt="Wireframe pass of the same shot"></div>
+      <div class="media fit-contain">
+        <video class="play-in-view zoomable" muted loop playsinline preload="none"
+               poster="media/mx-triptych-poster.jpg">
+          <source src="media/mx-triptych.mp4" type="video/mp4">
+        </video>
       </div>
       <div class="body">
         <h3>MX Mechanical Mini</h3>
-        <p class="kicker">Personal work · modelled, lit and rendered</p>
+        <p class="kicker">Personal work · beauty, clay and wireframe passes</p>
         <ul class="stack"><li>Blender</li><li>Modelling</li><li>Materials</li><li>Lighting</li></ul>
       </div>
     </article>
@@ -586,6 +605,38 @@
   }, { threshold: [0, 0.4, 1] });
 
   vids.forEach(function (v) { io.observe(v); });
+})();
+</script>
+
+<dialog id="lightbox">
+  <button id="lightbox-close" type="button" aria-label="Close">&times;</button>
+  <div id="lightbox-content"></div>
+</dialog>
+
+<script>
+/* Click to enlarge. Clones the clicked element into a native <dialog>, so ESC,
+   backdrop dismissal and focus trapping are all handled by the browser. */
+(function () {
+  var dlg = document.getElementById('lightbox');
+  if (!dlg || !dlg.showModal) return;
+  var box = document.getElementById('lightbox-content');
+
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('.zoomable');
+    if (el) {
+      var big = el.cloneNode(true);
+      big.classList.remove('zoomable');
+      big.removeAttribute('poster');
+      if (big.tagName === 'VIDEO') { big.controls = true; big.autoplay = true; big.loop = true; }
+      box.replaceChildren(big);
+      dlg.showModal();
+      return;
+    }
+    // click on the backdrop, i.e. the dialog itself rather than its contents
+    if (e.target === dlg || e.target.id === 'lightbox-close') dlg.close();
+  });
+
+  dlg.addEventListener('close', function () { box.replaceChildren(); });
 })();
 </script>
 
