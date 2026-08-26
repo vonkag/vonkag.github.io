@@ -32,3 +32,22 @@ skill; the badge on it adds nothing and carries risk.
 - **100MB hard limit per file.** The conversion settings keep clips far under this.
 - **webm does not always win.** On high-motion footage x264 can beat VP9. The script
   warns you; when it does, ship the mp4 alone.
+
+## Source footage notes
+
+**In-headset VR training recordings** (Drive: `GeneXR/Portfolio Content/Energy Wheel/EBS Recordings`)
+
+| Source | Maps to | Usable |
+|---|---|---|
+| `EBS001` | Module 1 | Thin. One fixed elevated vantage for five minutes, little variation |
+| `EBS002_1` | Module 2, Part A | Best of the set. Ladders, precast panels, exterior, interior gantry |
+| `EBS002_2` | Module 2, Part B | ❌ **Nothing usable. Do not cut from this.** Every frame is buried under assessment UI, and it reuses Module 1's environment |
+| `EBS003` | Modules 3 and 4 | Strongest. Three distinct environments: roadside utility, trench, precast yard |
+
+Keep cuts named by module (`m1-`, `m2-`, `m3-`) so the training structure survives.
+
+⚠ **Most frames in all four have UI panels over them.** The panels are the product, not
+Von's art, so clean frames are the constraint on what can be cut.
+
+⚠ **Never name the product or the client** on anything public. These are VR safety
+training modules, nothing more specific.
