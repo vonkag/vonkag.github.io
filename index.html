@@ -385,8 +385,10 @@
          years. Replace the hero slot with a real-time cut once the GeneXR capture is done. -->
     <article class="card feature">
       <div class="embed">
-        <iframe src="https://player.vimeo.com/video/792897249?title=0&amp;byline=0&amp;portrait=0"
-                allow="fullscreen; picture-in-picture" allowfullscreen
+        <!-- autoplay requires muted=1; browsers block sound-on autoplay outright.
+             loading="lazy" keeps the Vimeo player out of the initial page load. -->
+        <iframe src="https://player.vimeo.com/video/792897249?title=0&amp;byline=0&amp;portrait=0&amp;autoplay=1&amp;muted=1&amp;loop=1"
+                allow="autoplay; fullscreen; picture-in-picture" allowfullscreen
                 loading="lazy" title="Von Kagaoan animation reel, 2023"></iframe>
       </div>
       <div class="body">
