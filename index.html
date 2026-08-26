@@ -300,43 +300,19 @@
       <video muted loop playsinline preload="none" poster="media/m1-platform-overview-poster.jpg">
         <source src="media/m1-platform-overview.mp4" type="video/mp4">
       </video>
-      <figcaption>Elevated platform, construction site</figcaption>
+      <figcaption>Construction site, elevated platform</figcaption>
     </li>
     <li class="tile" tabindex="0">
-      <video muted loop playsinline preload="none" poster="media/m2-house-exterior-poster.jpg">
-        <source src="media/m2-house-exterior.mp4" type="video/mp4">
+      <video muted loop playsinline preload="none" poster="media/m2-residential-build-poster.jpg">
+        <source src="media/m2-residential-build.mp4" type="video/mp4">
       </video>
-      <figcaption>Residential exterior</figcaption>
-    </li>
-    <li class="tile" tabindex="0">
-      <video muted loop playsinline preload="none" poster="media/m2-atmosphere-poster.jpg">
-        <source src="media/m2-atmosphere.mp4" type="video/mp4">
-      </video>
-      <figcaption>Site exterior, dust and haze</figcaption>
-    </li>
-    <li class="tile" tabindex="0">
-      <video muted loop playsinline preload="none" poster="media/m2-gantry-interior-poster.jpg">
-        <source src="media/m2-gantry-interior.mp4" type="video/mp4">
-      </video>
-      <figcaption>Interior, gantry frame</figcaption>
-    </li>
-    <li class="tile" tabindex="0">
-      <video muted loop playsinline preload="none" poster="media/m3-roadside-poster.jpg">
-        <source src="media/m3-roadside.mp4" type="video/mp4">
-      </video>
-      <figcaption>Roadside utility scene</figcaption>
+      <figcaption>Residential build, exterior and interior</figcaption>
     </li>
     <li class="tile" tabindex="0">
       <video muted loop playsinline preload="none" poster="media/m3-roadworks-poster.jpg">
         <source src="media/m3-roadworks.mp4" type="video/mp4">
       </video>
       <figcaption>Roadworks and traffic management</figcaption>
-    </li>
-    <li class="tile" tabindex="0">
-      <video muted loop playsinline preload="none" poster="media/m3-energy-lines-poster.jpg">
-        <source src="media/m3-energy-lines.mp4" type="video/mp4">
-      </video>
-      <figcaption>Overhead line hazard visualisation</figcaption>
     </li>
   </ul>
 
@@ -446,11 +422,13 @@
          years. Replace the hero slot with a real-time cut once the GeneXR capture is done. -->
     <article class="card feature">
       <div class="embed">
-        <!-- autoplay requires muted=1; browsers block sound-on autoplay outright.
-             loading="lazy" keeps the Vimeo player out of the initial page load. -->
-        <iframe src="https://player.vimeo.com/video/792897249?title=0&amp;byline=0&amp;portrait=0&amp;autoplay=1&amp;muted=1&amp;loop=1"
+        <!-- No src attribute: the player is not loaded, and therefore cannot start
+             playing, until it is genuinely on screen. loading="lazy" fired far too early
+             and the reel played while the visitor was still further up the page. -->
+        <iframe class="vimeo-defer"
+                data-src="https://player.vimeo.com/video/792897249?title=0&amp;byline=0&amp;portrait=0&amp;autoplay=1&amp;muted=1&amp;loop=1"
                 allow="autoplay; fullscreen; picture-in-picture" allowfullscreen
-                loading="lazy" title="Von Kagaoan animation reel, 2023"></iframe>
+                title="Von Kagaoan animation reel, 2023"></iframe>
       </div>
       <div class="body">
         <h3>Animation reel</h3>
@@ -647,6 +625,37 @@
   }, { threshold: [0, 0.4, 1] });
 
   vids.forEach(function (v) { io.observe(v); });
+})();
+</script>
+
+<script>
+/* Vimeo, deferred. The iframe has no src until it scrolls into view, so the player is
+   never even fetched until then. After that, play and pause are driven by postMessage
+   to the Vimeo player, which needs no SDK and no third-party script. */
+(function () {
+  var frames = [].slice.call(document.querySelectorAll('iframe.vimeo-defer'));
+  if (!frames.length || !('IntersectionObserver' in window)) {
+    frames.forEach(function (f) { f.src = f.dataset.src; });   // no observer, just load it
+    return;
+  }
+  function cmd(f, method) {
+    if (!f.contentWindow) return;
+    try {
+      f.contentWindow.postMessage(JSON.stringify({ method: method }), 'https://player.vimeo.com');
+    } catch (e) {}
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      var f = e.target;
+      if (e.isIntersecting && e.intersectionRatio > 0.4) {
+        if (!f.src) { f.src = f.dataset.src; }   // first time: loading it starts it
+        else { cmd(f, 'play'); }
+      } else if (f.src) {
+        cmd(f, 'pause');
+      }
+    });
+  }, { threshold: [0, 0.4, 1] });
+  frames.forEach(function (f) { io.observe(f); });
 })();
 </script>
 
