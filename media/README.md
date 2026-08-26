@@ -51,3 +51,19 @@ Von's art, so clean frames are the constraint on what can be cut.
 
 ⚠ **Never name the product or the client** on anything public. These are VR safety
 training modules, nothing more specific.
+
+### Rejected cuts, do not redo
+
+| Cut | Why |
+|---|---|
+| `m2-ladder-panel` (2A @ 0:13) | Too static. Replaced with `m2-ladder-climb` (2A @ 1:03), which has the worker actually climbing |
+| `m3-trench` | ❌ Scene renders against **white, with no HDRI environment**. Reads as unfinished |
+| `m3-pump-boom` | ❌ Same. White background, missing HDRI |
+
+⏰ **If the trench and pump-boom scenes are worth re-recording with the HDRI in place,
+that has to happen before system access ends on 25 September 2026.** After that the
+source is gone and those scenes cannot be recovered.
+
+**Judging cuts from contact sheets has a known blind spot:** frames sampled every 8 to 20
+seconds show composition but not motion. Expect a couple of picks per batch to be duller
+in motion than they looked as stills. `m2-ladder-panel` was exactly that.
