@@ -146,7 +146,7 @@
   }
   .stack li + li::before{content:"·";padding:0 8px;opacity:.55;}
   .links{display:flex;flex-wrap:wrap;gap:16px;font-size:14px;}
-  .links a{text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:1px;}
+  .links a{display:inline-flex;align-items:center;text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:1px;}
   .links a:hover{border-bottom-color:var(--ink);}
 
   /* ---------- hover-to-play thumbnail grid ---------- */
@@ -194,6 +194,9 @@
      outer panes off */
   .fit-contain video,.fit-contain img{object-fit:contain;}
   .zoomable{cursor:zoom-in;}
+
+  /* inline link icons: currentColor so they follow the theme, 1em so they follow type size */
+  .ico{width:1em;height:1em;vertical-align:-0.14em;margin-right:.45em;flex:none;}
 
   /* ---------- carousel ----------
      Built on native scroll-snap rather than transforms, so touch swipe, momentum and
@@ -282,9 +285,9 @@
          The .role and .meta styles are kept, so uncommenting this restores it as-is.
     <p class="role">Real-time 3D, software and hardware. Auckland, New Zealand.</p>
     <div class="meta">
-      <a href="mailto:vonkagaoan@gmail.com">vonkagaoan@gmail.com</a>
+      <a href="mailto:vonkagaoan@gmail.com"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M3.2 7.2 12 13l8.8-5.8"/></svg>vonkagaoan@gmail.com</a>
       <span class="sep">·</span>
-      <a href="https://instagram.com/vonkagaoan">Instagram</a>
+      <a href="https://instagram.com/vonkagaoan"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>Instagram</a>
     </div>
     -->
   </header>
@@ -468,7 +471,7 @@
       </div>
       <div class="body">
         <h3>TallyToo</h3>
-        <p class="kicker">Tally tracking app, <a href="https://play.google.com/store/apps/details?id=com.vonimatic.tallytoo">live on Google Play</a></p>
+        <p class="kicker">Tally tracking app, <a href="https://play.google.com/store/apps/details?id=com.vonimatic.tallytoo"><svg class="ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.3 1.9c-.2.2-.3.5-.3.9v18.4c0 .4.1.7.3.9l9.6-10.1L3.3 1.9z"/><path d="M14.1 13.1l2.5 2.6-10.9 6.2 8.4-8.8z"/><path d="M14.1 10.9L5.7 2.1l10.9 6.2-2.5 2.6z"/><path d="M17.9 9.1l2.8 1.6c.9.5.9 1.7 0 2.2l-2.8 1.6-2.6-2.7 2.6-2.7z"/></svg>live on Google Play</a></p>
         <p>
           Designed, built and shipped solo, including the backend data model and the release
           pipeline. Also built a companion dashboard that renders live tally data to a
@@ -527,9 +530,9 @@
     </p>
   </div>
   <div class="links">
-    <a href="mailto:vonkagaoan@gmail.com">vonkagaoan@gmail.com</a>
+    <a href="mailto:vonkagaoan@gmail.com"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M3.2 7.2 12 13l8.8-5.8"/></svg>vonkagaoan@gmail.com</a>
     <!-- <a href="https://github.com/vonkag">GitHub</a> -->
-    <a href="https://instagram.com/vonkagaoan">Instagram</a>
+    <a href="https://instagram.com/vonkagaoan"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>Instagram</a>
   </div>
 </section>
 </div>
