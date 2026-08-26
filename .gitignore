@@ -1,0 +1,14 @@
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Raw video sources must NOT go in this repo.
+# GitHub Pages does not resolve Git LFS, and raw exports blow past the 100MB file limit.
+# Only compressed .mp4 / .webm belong in media/ - see README for the ffmpeg commands.
+*.mov
+*.MOV
+*.avi
+*.mkv
+*.braw
+*.r3d
+media/_raw/
