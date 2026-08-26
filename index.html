@@ -109,6 +109,32 @@
   .links a{text-decoration:none;border-bottom:1px solid var(--ink);padding-bottom:1px;}
   .links a:hover{opacity:.6;}
 
+  /* ---------- hover-to-play thumbnail grid ---------- */
+  .tiles{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:12px;margin:0 0 32px;padding:0;list-style:none;
+  }
+  .tile{
+    position:relative;aspect-ratio:16/9;overflow:hidden;border-radius:4px;
+    background:var(--rule);cursor:pointer;margin:0;
+  }
+  .tile video,.tile img{width:100%;height:100%;object-fit:cover;display:block;}
+  .tile:focus-visible{outline:2px solid var(--ink);outline-offset:2px;}
+  .tile figcaption{
+    position:absolute;left:0;right:0;bottom:0;
+    padding:24px 12px 9px;font-size:12px;color:#fff;
+    background:linear-gradient(transparent,rgba(0,0,0,.8));
+    opacity:0;transition:opacity .18s ease;
+  }
+  .tile:hover figcaption,
+  .tile:focus-within figcaption,
+  .tile.is-playing figcaption{opacity:1;}
+  /* placeholder styling, delete once real clips are in */
+  .tile-empty{
+    display:flex;align-items:center;justify-content:center;text-align:center;
+    color:var(--muted);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  }
+
   /* full-width feature card, use for the reel */
   .feature{grid-column:1/-1;}
   .feature .media{aspect-ratio:16/9;background:#000;}
@@ -163,22 +189,35 @@
     that render live, hold framerate, and read correctly through a moving camera.
   </p>
 
-  <div class="grid">
+  <!-- ========== HOVER-TO-PLAY GRID ==========
+       Duplicate a <li class="tile"> per shot. Each needs:
+         - poster: a jpg, so the grid renders instantly with no video downloaded
+         - preload="none": nothing loads until hover. Without this, twelve clips
+           all start fetching on page load
+         - muted + playsinline: required, or play() is blocked on Chrome and iOS
+       No autoplay attribute. The script at the bottom of the page drives it.
+  ========================================== -->
+  <ul class="tiles">
 
-    <!-- REEL: replace VIMEO_ID once the cut is up. Vimeo, not YouTube. -->
-    <article class="card feature">
-      <div class="embed">
-        <!-- <iframe src="https://player.vimeo.com/video/VIMEO_ID?title=0&byline=0&portrait=0"
-                allow="autoplay; fullscreen; picture-in-picture" allowfullscreen
-                title="Von Kagaoan reel"></iframe> -->
-        <div class="media">Reel embed goes here</div>
-      </div>
-      <div class="body">
-        <h3>Showreel</h3>
-        <p class="kicker">Real-time work, 60 to 90 seconds</p>
-        <p>Best work first, no slow build, no long title card.</p>
-      </div>
-    </article>
+    <!-- REAL ONE looks like this, uncomment when you have the files:
+    <li class="tile" tabindex="0">
+      <video muted loop playsinline preload="none" poster="media/shot-01-poster.jpg">
+        <source src="media/shot-01.webm" type="video/webm">
+        <source src="media/shot-01.mp4" type="video/mp4">
+      </video>
+      <figcaption>Scene name, Unity, real-time</figcaption>
+    </li>
+    -->
+
+    <li class="tile tile-empty">Shot 01</li>
+    <li class="tile tile-empty">Shot 02</li>
+    <li class="tile tile-empty">Shot 03</li>
+    <li class="tile tile-empty">Shot 04</li>
+    <li class="tile tile-empty">Shot 05</li>
+    <li class="tile tile-empty">Shot 06</li>
+  </ul>
+
+  <div class="grid">
 
     <!-- PATTERN for a self-hosted silent loop. Duplicate per project.
          muted + playsinline are required or autoplay fails on Chrome and iOS. -->
@@ -226,6 +265,26 @@
           Hocus Pocus: The Brew, Toyota and Valspar, plus matchmoving on Ash Vs Evil Dead.
         </p>
         <ul class="stack"><li>Maya</li><li>Character animation</li><li>Matchmove</li></ul>
+      </div>
+    </article>
+
+    <!-- Deliberately LAST and deliberately DATED. This cut is from Jan 2023, so it predates
+         SkillsVR and GeneXR entirely and shows character animation rather than real-time.
+         Undated and at the top it would read as current work and undersell the last three
+         years. Replace the hero slot with a real-time cut once the GeneXR capture is done. -->
+    <article class="card feature">
+      <div class="embed">
+        <iframe src="https://player.vimeo.com/video/792897249?title=0&amp;byline=0&amp;portrait=0"
+                allow="fullscreen; picture-in-picture" allowfullscreen
+                loading="lazy" title="Von Kagaoan animation reel, 2023"></iframe>
+      </div>
+      <div class="body">
+        <h3>Animation reel</h3>
+        <p class="kicker">2023 · character animation</p>
+        <p>
+          Earlier work, cut before the move into real-time. Includes the Flux commercial
+          animation above.
+        </p>
       </div>
     </article>
 
@@ -331,6 +390,51 @@
     <a href="https://github.com/vonkag/vonkag.github.io">Source</a>.
   </footer>
 </div>
+
+<script>
+/* Hover-to-play for the thumbnail grid.
+   Desktop: play on hover or keyboard focus, reset on leave.
+   Touch:   there is no hover, so play whichever tile is actually on screen. */
+(function () {
+  var tiles = [].slice.call(document.querySelectorAll('.tile video'));
+  if (!tiles.length) return;
+
+  function play(v) {
+    var p = v.play();
+    // play() rejects if the pointer leaves before the promise settles. Expected, ignore it.
+    if (p && p.catch) p.catch(function () {});
+    v.parentNode.classList.add('is-playing');
+  }
+  function stop(v) {
+    v.pause();
+    v.currentTime = 0;
+    v.parentNode.classList.remove('is-playing');
+  }
+
+  var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  var reduced  = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (canHover) {
+    tiles.forEach(function (v) {
+      var tile = v.parentNode;
+      tile.addEventListener('mouseenter', function () { play(v); });
+      tile.addEventListener('mouseleave', function () { stop(v); });
+      tile.addEventListener('focusin',    function () { play(v); });
+      tile.addEventListener('focusout',   function () { stop(v); });
+    });
+  } else if (!reduced && 'IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        var v = e.target.querySelector('video');
+        if (!v) return;
+        if (e.isIntersecting && e.intersectionRatio > 0.6) { play(v); } else { stop(v); }
+      });
+    }, { threshold: [0, 0.6, 1] });
+    tiles.forEach(function (v) { io.observe(v.parentNode); });
+  }
+  /* If neither branch runs, tiles just show their poster frame. Nothing breaks. */
+})();
+</script>
 
 </body>
 </html>
