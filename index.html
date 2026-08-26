@@ -121,7 +121,6 @@
     color:var(--muted);margin:0 0 8px;
   }
   .section-intro{margin:0 0 32px;max-width:60ch;}
-  .tiles-note{color:var(--muted);font-size:13px;margin:0 0 10px;}
   .about p{max-width:60ch;margin:0 0 16px;}
 
   /* ---------- project cards ---------- */
@@ -151,7 +150,7 @@
   /* ---------- hover-to-play thumbnail grid ---------- */
   .tiles{
     display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-    gap:12px;margin:0 0 32px;padding:0;list-style:none;
+    gap:12px;margin:0;padding:0;list-style:none;
   }
   .tile{
     position:relative;aspect-ratio:16/9;overflow:hidden;border-radius:4px;
@@ -296,29 +295,36 @@
          - muted + playsinline: required, or play() is blocked on Chrome and iOS
        No autoplay attribute. The script at the bottom of the page drives it.
   ========================================== -->
-  <p class="tiles-note">VR safety training modules, captured in headset. Art Lead, 2025 to 2026.</p>
-  <ul class="tiles">
-    <li class="tile" tabindex="0">
-      <video muted loop playsinline preload="none" poster="media/m1-platform-overview-poster.jpg">
-        <source src="media/m1-platform-overview.mp4" type="video/mp4">
-      </video>
-      <figcaption>Construction site, elevated platform</figcaption>
-    </li>
-    <li class="tile" tabindex="0">
-      <video muted loop playsinline preload="none" poster="media/m2-residential-build-poster.jpg">
-        <source src="media/m2-residential-build.mp4" type="video/mp4">
-      </video>
-      <figcaption>Residential build, exterior and interior</figcaption>
-    </li>
-    <li class="tile" tabindex="0">
-      <video muted loop playsinline preload="none" poster="media/m3-roadworks-poster.jpg">
-        <source src="media/m3-roadworks.mp4" type="video/mp4">
-      </video>
-      <figcaption>Roadworks and traffic management</figcaption>
-    </li>
-  </ul>
 
   <div class="grid">
+
+    <article class="card feature">
+    <ul class="tiles">
+      <li class="tile" tabindex="0">
+        <video muted loop playsinline preload="none" poster="media/m1-platform-overview-poster.jpg">
+          <source src="media/m1-platform-overview.mp4" type="video/mp4">
+        </video>
+        <figcaption>Construction site, elevated platform</figcaption>
+      </li>
+      <li class="tile" tabindex="0">
+        <video muted loop playsinline preload="none" poster="media/m2-residential-build-poster.jpg">
+          <source src="media/m2-residential-build.mp4" type="video/mp4">
+        </video>
+        <figcaption>Residential build, exterior and interior</figcaption>
+      </li>
+      <li class="tile" tabindex="0">
+        <video muted loop playsinline preload="none" poster="media/m3-roadworks-poster.jpg">
+          <source src="media/m3-roadworks.mp4" type="video/mp4">
+        </video>
+        <figcaption>Roadworks and traffic management</figcaption>
+      </li>
+    </ul>
+      <div class="body">
+        <h3>VR safety training</h3>
+        <p class="kicker">Three modules · captured in headset</p>
+        <ul class="stack"><li>Unity</li><li>Environment art</li><li>Real-time</li><li>Lighting</li></ul>
+      </div>
+    </article>
 
     <article class="card feature">
       <div class="portrait-row">
