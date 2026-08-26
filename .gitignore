@@ -12,3 +12,6 @@ Thumbs.db
 *.braw
 *.r3d
 media/_raw/
+
+# scratch: local blend copies, renders, logs. Source assets must never be committed.
+.work/

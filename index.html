@@ -195,6 +195,24 @@
   .fit-contain video,.fit-contain img{object-fit:contain;}
   .zoomable{cursor:zoom-in;}
 
+  /* ---------- carousel ----------
+     Built on native scroll-snap rather than transforms, so touch swipe, momentum and
+     keyboard scrolling all come from the browser. The script only nudges it along. */
+  .carousel{
+    display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;
+    scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:2px;
+  }
+  .carousel::-webkit-scrollbar{display:none;}
+  .carousel .pane{
+    flex:0 0 auto;width:calc((100% - 20px) / 3);aspect-ratio:9/16;
+    scroll-snap-align:start;background:var(--card);border-radius:4px;overflow:hidden;
+  }
+  .carousel img{width:100%;height:100%;object-fit:cover;display:block;}
+  /* on a phone, show one and a peek of the next so it reads as scrollable */
+  @media (max-width:720px){
+    .carousel .pane{width:78%;}
+  }
+
   /* ---------- lightbox ----------
      Native <dialog>: ESC and backdrop dismissal come free, focus is trapped for us,
      and it needs no library. */
@@ -435,13 +453,21 @@
   <div class="grid">
 
     <article class="card feature">
-      <div class="portrait-row tall">
-        <div class="pane"><img class="zoomable" src="media/tallytoo-list.jpg"
-             alt="TallyToo tally list screen" data-caption="TallyToo, tally list"></div>
-        <div class="pane"><img class="zoomable" src="media/tallytoo-insights.jpg"
-             alt="TallyToo insights screen" data-caption="TallyToo, insights and trends"></div>
-        <div class="pane"><img class="zoomable" src="media/tallytoo-dark.jpg"
-             alt="TallyToo in dark mode" data-caption="TallyToo, dark mode"></div>
+      <div class="carousel" aria-label="TallyToo screenshots">
+        <div class="pane"><img class="zoomable" src="media/tallytoo-01.jpg"
+             alt="TallyToo, tally list" data-caption="TallyToo, tally list"></div>
+        <div class="pane"><img class="zoomable" src="media/tallytoo-02.jpg"
+             alt="TallyToo, tracking anything countable" data-caption="TallyToo, tracking anything countable"></div>
+        <div class="pane"><img class="zoomable" src="media/tallytoo-03.jpg"
+             alt="TallyToo, insights and trends" data-caption="TallyToo, insights and trends"></div>
+        <div class="pane"><img class="zoomable" src="media/tallytoo-04.jpg"
+             alt="TallyToo, shared tallies" data-caption="TallyToo, shared tallies"></div>
+        <div class="pane"><img class="zoomable" src="media/tallytoo-05.jpg"
+             alt="TallyToo, creating a tally" data-caption="TallyToo, creating a tally"></div>
+        <div class="pane"><img class="zoomable" src="media/tallytoo-06.jpg"
+             alt="TallyToo, themes" data-caption="TallyToo, themes"></div>
+        <div class="pane"><img class="zoomable" src="media/tallytoo-07.jpg"
+             alt="TallyToo, dark mode" data-caption="TallyToo, dark mode"></div>
       </div>
       <div class="body">
         <h3>TallyToo</h3>
@@ -632,6 +658,48 @@
     });
   }, { threshold: [0, 0.4, 1] });
   frames.forEach(function (f) { io.observe(f); });
+})();
+</script>
+
+<script>
+/* Carousel auto-advance. The scrolling itself is native; this only moves it on.
+   Pauses on hover, focus and while the visitor is scrolling it themselves, and does
+   not run at all for anyone who has asked for reduced motion. */
+(function () {
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  [].forEach.call(document.querySelectorAll('.carousel'), function (el) {
+    if (reduced) return;
+    var timer = null, idle = null, paused = false;
+
+    function step() {
+      if (paused) return;
+      var pane = el.querySelector('.pane');
+      if (!pane) return;
+      var w = pane.getBoundingClientRect().width + 10;      // pane + gap
+      var atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 4;
+      el.scrollTo({ left: atEnd ? 0 : el.scrollLeft + w, behavior: 'smooth' });
+    }
+    function start() { stop(); timer = setInterval(step, 3600); }
+    function stop()  { if (timer) { clearInterval(timer); timer = null; } }
+
+    el.addEventListener('pointerenter', function () { paused = true; });
+    el.addEventListener('pointerleave', function () { paused = false; });
+    el.addEventListener('focusin',      function () { paused = true; });
+    el.addEventListener('focusout',     function () { paused = false; });
+    // a manual scroll should not fight the timer: hold off until they stop
+    el.addEventListener('scroll', function () {
+      paused = true;
+      clearTimeout(idle);
+      idle = setTimeout(function () { paused = false; }, 2500);
+    }, { passive: true });
+
+    // only run while it is actually on screen
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) {
+        es.forEach(function (e) { e.isIntersecting ? start() : stop(); });
+      }, { threshold: 0.3 }).observe(el);
+    } else { start(); }
+  });
 })();
 </script>
 
