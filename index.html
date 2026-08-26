@@ -106,7 +106,16 @@
   }
 
   *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
+  html{
+    scroll-behavior:smooth;
+    /* Kill the grey-blue box mobile browsers paint over a tapped element. This is only
+       the tap flash: :focus-visible outlines are a separate mechanism and still there,
+       which is what keyboard users actually rely on. */
+    -webkit-tap-highlight-color:transparent;
+  }
+  /* Removing that feedback with nothing in its place leaves a tap looking ignored on a
+     slow connection, so put something quieter back. */
+  a:active,button:active,.zoomable:active{opacity:.65;}
   body{
     margin:0;
     font-family:'Inter','Segoe UI Variable Display','Segoe UI',system-ui,sans-serif;
@@ -723,15 +732,16 @@
   <div class="about">
     <!-- Facts first, disposition second. Under a heading that already says About, the
          old opening word "About" was doing a different job (approximately) and read as a
-         stutter, so it is "Roughly" now. -->
+         stutter, so it is "Roughly" now.
+         A closing line about learning by doing was tried three ways and cut every time.
+         The projects above demonstrate it; saying it as well only ever read as filler. -->
     <p>
       Roughly ten years in 3D, based in Auckland. Character animation for television
       commercials to start with, four years teaching it, then real-time and XR.
     </p>
     <p>
       At heart I like making things, whether that is building and tinkering with something
-      physical, solving a technical or digital problem, or tackling a creative one. I learn
-      by doing, and I take on work that starts outside what I already know.
+      physical, solving a technical or digital problem, or tackling a creative one.
     </p>
   </div>
   <div class="links">
