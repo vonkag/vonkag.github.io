@@ -121,6 +121,7 @@
     color:var(--muted);margin:0 0 8px;
   }
   .section-intro{margin:0 0 32px;max-width:60ch;}
+  .tiles-note{color:var(--muted);font-size:13px;margin:0 0 10px;}
   .about p{max-width:60ch;margin:0 0 16px;}
 
   /* ---------- project cards ---------- */
@@ -149,7 +150,7 @@
 
   /* ---------- hover-to-play thumbnail grid ---------- */
   .tiles{
-    display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
     gap:12px;margin:0 0 32px;padding:0;list-style:none;
   }
   .tile{
@@ -283,8 +284,8 @@
 <section id="realtime">
   <h2>3D</h2>
   <p class="section-intro">
-    Environments and assets built in game engines for VR, alongside photoreal modelling
-    and rendering.
+    Environments, assets and animation built in game engines for VR, alongside photoreal
+    modelling and rendering.
   </p>
 
   <!-- ========== HOVER-TO-PLAY GRID ==========
@@ -295,6 +296,7 @@
          - muted + playsinline: required, or play() is blocked on Chrome and iOS
        No autoplay attribute. The script at the bottom of the page drives it.
   ========================================== -->
+  <p class="tiles-note">VR safety training modules, captured in headset. Art Lead, 2025 to 2026.</p>
   <ul class="tiles">
     <li class="tile" tabindex="0">
       <video muted loop playsinline preload="none" poster="media/m1-platform-overview-poster.jpg">
@@ -369,53 +371,6 @@
 
     <!-- PATTERN for a self-hosted silent loop. Duplicate per project.
          muted + playsinline are required or autoplay fails on Chrome and iOS. -->
-    <article class="card">
-      <div class="media">
-        <!--
-        <video autoplay muted loop playsinline preload="metadata" poster="media/genexr-poster.jpg">
-          <source src="media/genexr.webm" type="video/webm">
-          <source src="media/genexr.mp4" type="video/mp4">
-        </video>
-        -->
-        Loop or still goes here
-      </div>
-      <div class="body">
-        <h3>XR training product</h3>
-        <p class="kicker">Art Lead · 2025 to 2026</p>
-        <p>
-          Primary 3D artist across the VR product line. Owned the visual direction of all XR
-          output, from look development through to release.
-        </p>
-        <ul class="stack"><li>Unity</li><li>Blender</li><li>Real-time</li><li>Lighting</li></ul>
-      </div>
-    </article>
-
-    <article class="card">
-      <div class="media">Loop or still goes here</div>
-      <div class="body">
-        <h3>VR training environments</h3>
-        <p class="kicker">3D Generalist · 2023 to 2025</p>
-        <p>
-          Assets and animation for Unity based VR training, built to strict real-time
-          performance budgets alongside developers, learning designers and QA.
-        </p>
-        <ul class="stack"><li>Unity</li><li>Optimisation</li><li>Animation</li></ul>
-      </div>
-    </article>
-
-    <article class="card">
-      <div class="media">Loop or still goes here</div>
-      <div class="body">
-        <h3>Broadcast commercials</h3>
-        <p class="kicker">3D Character Animator · 2017 to 2018</p>
-        <p>
-          Character animation in Maya for television commercials. Credits include Disney's
-          Hocus Pocus: The Brew, Toyota and Valspar, plus matchmoving on Ash Vs Evil Dead.
-        </p>
-        <ul class="stack"><li>Maya</li><li>Character animation</li><li>Matchmove</li></ul>
-      </div>
-    </article>
-
     <!-- Deliberately LAST and deliberately DATED. This cut is from Jan 2023, so it predates
          SkillsVR and GeneXR entirely and shows character animation rather than real-time.
          Undated and at the top it would read as current work and undersell the last three
