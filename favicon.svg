@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- VK in Saira Condensed ExtraBold, the same face as the wordmark, converted to
+       outlines. A favicon cannot pull in a webfont, so the glyphs have to be paths.
+       Colours flip with the browser theme so the tile always has an edge against the
+       tab bar: dark tile on a light theme, light tile on a dark one. -->
+  <style>
+    .tile { fill: #141414 }
+    .mark { fill: #ffffff }
+    @media (prefers-color-scheme: dark) {
+      .tile { fill: #ededed }
+      .mark { fill: #141414 }
+    }
+  </style>
+  <rect class="tile" width="64" height="64" rx="12"/>
+  <g class="mark" transform="translate(8.6245 48.1469) scale(0.046939 -0.046939)">
+      <path transform="translate(0.0000 0)" d="M130 0 8 688H170L244 164H254L325 688H484L362 0Z"/>
+      <path transform="translate(492.0000 0)" d="M325 0 230 279H206V0H46V688H206V419H230L328 688H494L356 359L496 0Z"/>
+  </g>
+</svg>
