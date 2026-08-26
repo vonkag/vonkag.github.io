@@ -136,6 +136,8 @@
   .card .body{padding:14px 0 0;}
   .card h3{margin:0 0 2px;font-size:17px;}
   .card .kicker{color:var(--muted);font-size:13px;margin:0 0 10px;}
+  .card .kicker a{border-bottom:1px solid var(--rule);text-decoration:none;}
+  .card .kicker a:hover{border-bottom-color:var(--ink);}
   .card p{margin:0 0 12px;font-size:15px;}
   /* chips were the only other boxes on the page, so they became a plain separated line */
   .stack{
@@ -182,6 +184,8 @@
   .portrait-row .pane{
     aspect-ratio:3/4;background:var(--card);border-radius:4px;overflow:hidden;
   }
+  /* phone screenshots are 9:16, taller than the keyboard renders */
+  .portrait-row.tall .pane{aspect-ratio:9/16;}
   .portrait-row img,.portrait-row video{
     width:100%;height:100%;object-fit:cover;display:block;
   }
@@ -336,7 +340,7 @@
       </li>
     </ul>
       <div class="body">
-        <h3>VR safety training</h3>
+        <h3>Energy Based Safety (EBS) VR training</h3>
         <p class="kicker">Three modules · captured in headset</p>
         <ul class="stack"><li>Unity</li><li>Environment art</li><li>Real-time</li><li>Lighting</li></ul>
       </div>
@@ -430,32 +434,24 @@
 
   <div class="grid">
 
-    <article class="card">
-      <div class="media">Screen recording goes here</div>
+    <article class="card feature">
+      <div class="portrait-row tall">
+        <div class="pane"><img class="zoomable" src="media/tallytoo-list.jpg"
+             alt="TallyToo tally list screen" data-caption="TallyToo, tally list"></div>
+        <div class="pane"><img class="zoomable" src="media/tallytoo-insights.jpg"
+             alt="TallyToo insights screen" data-caption="TallyToo, insights and trends"></div>
+        <div class="pane"><img class="zoomable" src="media/tallytoo-dark.jpg"
+             alt="TallyToo in dark mode" data-caption="TallyToo, dark mode"></div>
+      </div>
       <div class="body">
         <h3>TallyToo</h3>
-        <p class="kicker">Tally tracking app, live on Google Play</p>
+        <p class="kicker">Tally tracking app, <a href="https://play.google.com/store/apps/details?id=com.vonimatic.tallytoo">live on Google Play</a></p>
         <p>
           Designed, built and shipped solo, including the backend data model and the release
-          pipeline. Hand-drawn aesthetic, built for counting anything worth counting.
+          pipeline. Also built a companion dashboard that renders live tally data to a
+          jailbroken Kindle over the local network, as a wall mounted e-ink display.
         </p>
         <ul class="stack"><li>React Native</li><li>Expo</li><li>TypeScript</li><li>Supabase</li></ul>
-        <div class="links">
-          <a href="https://play.google.com/store/apps/details?id=com.vonimatic.tallytoo">Google Play</a>
-        </div>
-      </div>
-    </article>
-
-    <article class="card">
-      <div class="media">Photo of the Kindle goes here</div>
-      <div class="body">
-        <h3>E-ink dashboard</h3>
-        <p class="kicker">Jailbroken Kindle as a wall display</p>
-        <p>
-          A render server on the local network generates e-ink optimised images from live
-          application data. Rotating boards, battery gauge, deployed and in daily use.
-        </p>
-        <ul class="stack"><li>Python</li><li>E-ink</li><li>Linux</li></ul>
       </div>
     </article>
 
