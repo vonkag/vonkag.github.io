@@ -380,19 +380,36 @@
     .mata-row .reel figcaption{transition:none;}
   }
 
+  /* Swipe rows use the TallyToo carousel mechanics: native scroll-snap, so the swipe, the
+     momentum and the snap all come from the browser. 68% puts one item and a slice of the
+     next on screen, and that peek is the only thing signalling the row can be swiped.
+     min-width:0 lets .shots shrink under its content inside the grid track. */
+
+  /* The frames swipe from 900, earlier than everything else. Measured in the 3-up grid they
+     shrink with the container: 226px wide at 1032, 157px by 730. That is a thumbnail for
+     the photographs that are the whole evidence for the camera, and it left a cliff where
+     10px of window width tripled their size. The reel keeps its column here, because full
+     width at 900 would make it roughly 850x1500. */
+  @media (max-width:900px){
+    .mata-row .shots{
+      display:flex;gap:10px;min-width:0;overflow-x:auto;scroll-snap-type:x mandatory;
+      scrollbar-width:none;-webkit-overflow-scrolling:touch;
+    }
+    .mata-row .shots::-webkit-scrollbar{display:none;}
+    .mata-row .shot{flex:0 0 auto;width:68%;scroll-snap-align:start;}
+  }
+
+  /* Phone: the reel goes full width and the keyboard row swipes too. That row reflows its
+     columns rather than shrinking, 337px down to 237px, so it holds up until here alone. */
   @media (max-width:720px){
-    /* Stacked, these rows made the card enormous and buried everything below the fold.
-       Same mechanics as the TallyToo carousel: native scroll-snap, so the swipe, the
-       momentum and the snap all come from the browser rather than from script. 68% shows
-       one frame and a slice of the next, which is what signals it can be swiped at all. */
     .mata-row{grid-template-columns:1fr;}
     .mata-row .reel{grid-column:1;aspect-ratio:9/16;}
-    .mata-row .shots,.portrait-row{
+    .portrait-row{
       display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;
       scrollbar-width:none;-webkit-overflow-scrolling:touch;
     }
-    .mata-row .shots::-webkit-scrollbar,.portrait-row::-webkit-scrollbar{display:none;}
-    .mata-row .shot,.portrait-row .pane{flex:0 0 auto;width:68%;scroll-snap-align:start;}
+    .portrait-row::-webkit-scrollbar{display:none;}
+    .portrait-row .pane{flex:0 0 auto;width:68%;scroll-snap-align:start;}
   }
 
   /* triptych is 1260x746, a touch wider than 16:9, so contain rather than crop the
