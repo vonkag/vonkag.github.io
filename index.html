@@ -275,6 +275,27 @@
   /* a card whose media links somewhere: the anchor has to fill the box, or as a flex
      item with no height of its own the image inside it collapses to nothing. */
   .card .media a{display:block;width:100%;height:100%;}
+  /* ...and it should say where it goes. Same treatment as the tile captions: hidden until
+     hover, so it never sits over the image while you are just looking at it. margin:0
+     because .media is a <figure> here and the browser default steals 40px either side. */
+  .card .media.linked{position:relative;margin:0;}
+  .card .media.linked figcaption{
+    position:absolute;left:0;right:0;bottom:0;
+    padding:26px 14px 11px;font-size:12px;color:#fff;
+    background:linear-gradient(transparent,rgba(0,0,0,.8));
+    opacity:0;transition:opacity .18s ease;
+    /* never swallow the click meant for the link underneath */
+    pointer-events:none;
+  }
+  .card .media.linked:hover figcaption,
+  .card .media.linked:focus-within figcaption{opacity:1;}
+  /* no hover on touch, so leave it showing rather than never showing it at all */
+  @media (hover:none){
+    .card .media.linked figcaption{opacity:1;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .card .media.linked figcaption{transition:none;}
+  }
   .card .body{padding:14px 0 0;}
   /* project titles take the display face too. The kicker and body under them stay Inter,
      which is what stops the page reading as a poster. */
@@ -616,12 +637,13 @@
       <!-- Hero above the tile grid. It is a still rather than a hover-to-play loop
            because it links through to the case study, and a tile that plays under the
            cursor competes with the click that is the point of it. -->
-      <div class="media">
+      <figure class="media linked">
         <a href="work/energy-based-safety/">
           <img src="media/ebs-hero.jpg"
                alt="Mobile crane lifting a steel vat tank inside a coned exclusion zone, from the Energy Based Safety VR training">
         </a>
-      </div>
+        <figcaption>Read the case study &rarr;</figcaption>
+      </figure>
     <ul class="tiles">
       <li class="tile" tabindex="0">
         <video class="zoomable" muted loop playsinline preload="none" poster="media/m1-platform-overview-poster.jpg">
