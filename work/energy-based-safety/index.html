@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Energy Based Safety, VR training — Von Kagaoan</title>
+
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../../favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta name="description" content="Environment and asset work for Energy Based Safety, a VR training product built in Unity for Meta Quest.">
+<link rel="canonical" href="https://vonkag.github.io/work/energy-based-safety/">
+
+<!-- Open Graph. This is the whole reason the case study is its own page rather than a
+     panel on the index: pasted into an email or a LinkedIn message it unfurls with the
+     crane shot instead of a bare domain. The URL has to be absolute, a relative one will
+     not resolve on the scraper's end. -->
+<meta property="og:title" content="Energy Based Safety, VR training">
+<meta property="og:description" content="Environment and asset work for a VR safety training product built in Unity for Meta Quest.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://vonkag.github.io/work/energy-based-safety/">
+<meta property="og:image" content="https://vonkag.github.io/media/ebs-hero.jpg">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preload" href="../../fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../fonts/saira-cond-800-latin.woff2" as="font" type="font/woff2" crossorigin>
+
+<style>
+  /* The font faces are declared again rather than shared from the index, because this
+     page is reachable directly from a pasted link and cannot assume the index was ever
+     loaded. The files are the same two, so anyone arriving from the home page already
+     has them cached. */
+  @font-face{
+    font-family:'Inter';src:url('../../fonts/inter-latin.woff2') format('woff2');
+    font-weight:400 800;font-style:normal;font-display:swap;
+  }
+  @font-face{
+    font-family:'Saira Condensed';src:url('../../fonts/saira-cond-800-latin.woff2') format('woff2');
+    font-weight:600 800;font-style:normal;font-display:swap;
+  }
+
+  /* Same tokens as the index so the two pages cannot drift apart on colour. Light is the
+     default for everyone and dark is opt-in, matching the home page exactly. */
+  :root{
+    --ink:#141414;
+    --muted:#5c5c5c;
+    --rule:#e0e0e0;
+    --bg:#ffffff;
+    --card:#fafafa;
+    --maxw:1080px;
+    --display:'Saira Condensed','Arial Narrow','Segoe UI',system-ui,sans-serif;
+  }
+  :root[data-theme="dark"]{
+    --ink:#ededed;
+    --muted:#9a9a9a;
+    --rule:#2a2a2a;
+    --bg:#0f0f0f;
+    --card:#171717;
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-tap-highlight-color:transparent;}
+  a:active,button:active,.zoomable:active{opacity:.65;}
+  body{
+    margin:0;
+    font-family:'Inter','Segoe UI Variable Display','Segoe UI',system-ui,sans-serif;
+    font-optical-sizing:auto;
+    color:var(--ink);background:var(--bg);
+    font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+  a{color:inherit;}
+
+  /* ---------- top bar ----------
+     No sticky section nav here. This page is one thread to read top to bottom, and a nav
+     of its own would compete with the one the visitor just came from. All it needs is a
+     way back and the theme control, so the toggle does not vanish the moment you leave
+     the index. */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;gap:24px;
+    padding:20px 0;border-bottom:1px solid var(--rule);
+  }
+  .back{
+    display:inline-flex;align-items:center;gap:8px;text-decoration:none;
+    font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;
+    color:var(--muted);transition:color .15s ease;
+  }
+  .back:hover,.back:focus-visible{color:var(--ink);}
+  .back svg{width:13px;height:13px;flex:none;}
+  @media (prefers-reduced-motion: reduce){ .back{transition:none;} }
+
+  #theme-toggle{
+    background:none;border:0;padding:4px;cursor:pointer;color:var(--muted);
+    display:flex;align-items:center;line-height:0;border-radius:4px;
+  }
+  #theme-toggle:hover,#theme-toggle:focus-visible{color:var(--ink);}
+  #theme-toggle svg{display:block;}
+  /* show the icon for the mode you would switch TO */
+  #theme-toggle .icon-sun{display:none;}
+  :root[data-theme="dark"] #theme-toggle .icon-sun{display:block;}
+  :root[data-theme="dark"] #theme-toggle .icon-moon{display:none;}
+
+  /* ---------- title block ---------- */
+  header{padding:56px 0 28px;}
+  h1{
+    font-family:var(--display);
+    font-size:clamp(34px,6vw,54px);
+    letter-spacing:.035em;font-weight:800;text-transform:uppercase;
+    line-height:1.05;margin:0 0 8px;
+  }
+  .kicker{color:var(--muted);margin:0;font-size:clamp(15px,2vw,17px);}
+
+  /* Spec block. A <dl> rather than a table: it is a set of name and value pairs, and it
+     reflows to one column on a phone without any of the horizontal-scroll trouble a table
+     brings. It sits above the hero on purpose, so someone who reads two lines and leaves
+     still knows what this was and what it was built in. 200px rather than 150 so the four
+     items hold a single row instead of breaking three-and-one. */
+  .spec{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:18px 28px;margin:28px 0 0;padding:22px 0 0;border-top:1px solid var(--rule);
+  }
+  .spec dt{
+    font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--muted);margin:0 0 3px;
+  }
+  .spec dd{margin:0;font-size:15px;}
+
+  /* ---------- figures ----------
+     The hero breaks the 1080px column and runs to 1240 on a wide screen. It is the one
+     image carrying the whole page, and the extra 160px is the difference between reading
+     as a screenshot and reading as a scene. Everything below it stays in the column. */
+  figure{margin:0;}
+  figcaption{color:var(--muted);font-size:13px;margin-top:9px;max-width:70ch;}
+  .shot{background:var(--card);border-radius:4px;overflow:hidden;display:block;}
+  .shot img{width:100%;height:auto;display:block;}
+  .hero{margin:34px auto 0;max-width:1240px;padding:0 24px;}
+
+  /* ---------- body copy ---------- */
+  section{padding:52px 0;border-bottom:1px solid var(--rule);}
+  section:last-of-type{border-bottom:0;padding-bottom:80px;}
+  h2{
+    font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.16em;
+    color:var(--muted);margin:0 0 14px;
+  }
+  h3{
+    font-family:var(--display);
+    font-size:20px;font-weight:600;letter-spacing:.01em;margin:0 0 6px;
+  }
+  section p{max-width:66ch;margin:0 0 16px;}
+  section p:last-child{margin-bottom:0;}
+
+  /* ---------- image grids ----------
+     Two across for the paired scene views, because the point of showing the wireframe
+     next to the clay is the comparison, and stacking them puts a scroll between the two
+     halves of it. One column on a phone, where side by side would leave each about 150px
+     wide and prove nothing. */
+  .pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:26px;}
+  @media (max-width:720px){ .pair{grid-template-columns:1fr;} }
+  /* Only figures that actually stack in the section flow. Written as figure + figure it
+     also caught the two inside .pair, which sit side by side, and dropped the second one
+     26px down its own grid cell. .pair carries its own margin-top. */
+  section > figure + figure,.pair + figure{margin-top:26px;}
+  .zoomable{cursor:zoom-in;}
+
+  /* ---------- lightbox ----------
+     The same native <dialog> as the index: ESC, backdrop dismissal and focus trapping all
+     come from the browser rather than from script that would have to be maintained in two
+     places. */
+  dialog#lightbox{
+    border:0;padding:0;background:none;max-width:96vw;max-height:96vh;overflow:visible;
+  }
+  dialog#lightbox::backdrop{background:rgba(0,0,0,.9);}
+  #lightbox-content img{
+    max-width:96vw;max-height:88vh;width:auto;height:auto;display:block;border-radius:4px;
+  }
+  #lightbox-caption{color:#d8d8d8;font-size:13px;text-align:center;margin-top:10px;}
+  #lightbox-caption:empty{display:none;}
+  @keyframes lb-in{from{opacity:0;transform:scale(.985);}to{opacity:1;transform:none;}}
+  @keyframes lb-fade{from{opacity:0;}to{opacity:1;}}
+  dialog#lightbox[open]{animation:lb-in .18s cubic-bezier(.2,.7,.3,1);}
+  dialog#lightbox[open]::backdrop{animation:lb-fade .18s ease-out;}
+  @media (prefers-reduced-motion: reduce){
+    dialog#lightbox[open],dialog#lightbox[open]::backdrop{animation:none;}
+  }
+  #lightbox-close{
+    position:fixed;top:14px;right:18px;background:none;border:0;color:#fff;
+    font-size:26px;line-height:1;cursor:pointer;opacity:.7;padding:6px;
+  }
+  #lightbox-close:hover,#lightbox-close:focus-visible{opacity:1;}
+
+  /* ---------- footer ---------- */
+  footer{
+    border-top:1px solid var(--rule);padding:26px 0 60px;
+    color:var(--muted);font-size:14px;
+  }
+</style>
+
+<script>
+  /* Must run before first paint, or a returning dark-mode visitor gets a white flash.
+     Same try/catch as the index: localStorage throws outright in some privacy modes. */
+  try {
+    if (localStorage.getItem('theme') === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  } catch (e) {}
+</script>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="topbar">
+    <a class="back" href="../../">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      Von Kagaoan
+    </a>
+    <button id="theme-toggle" type="button" aria-pressed="false" aria-label="Switch to dark mode">
+      <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none"
+           stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+           stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none"
+           stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+           stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+      </svg>
+    </button>
+  </div>
+
+  <header>
+    <h1>Energy Based Safety</h1>
+    <p class="kicker">VR training &middot; environment and asset work</p>
+
+    <dl class="spec">
+      <div><dt>Role</dt><dd>Art Lead</dd></div>
+      <div><dt>Engine</dt><dd>Unity</dd></div>
+      <div><dt>Modelled in</dt><dd>Blender</dd></div>
+      <div><dt>Platform</dt><dd>Meta Quest 3 / 3S</dd></div>
+    </dl>
+  </header>
+</div>
+
+<figure class="hero">
+  <span class="shot">
+    <img class="zoomable" src="../../media/ebs-hero.jpg"
+         alt="VR training scene: a mobile crane lifting a steel vat tank inside a coned exclusion zone, with three workers in hi-vis looking on"
+         data-caption="Vat tank lift. Real-time render in Unity.">
+  </span>
+  <figcaption>Vat tank lift. Real-time in Unity, captured in engine.</figcaption>
+</figure>
+
+<div class="wrap">
+
+  <section>
+    <h2>Overview</h2>
+    <p>
+      The VR training focuses on Energy Based Safety, including the application of the
+      Energy Wheel framework. Trainees work through hazard scenarios in a headset rather
+      than off a slide deck or filling in forms.
+    </p>
+    <p>
+      I built the entire environment, from layout to modelling and lighting.
+    </p>
+  </section>
+
+  <section>
+    <h2>Environment</h2>
+    <h3>Building for a headset rather than a frame</h3>
+    <p>
+      The scene is a controlled lift: a tank on the hook, an exclusion zone in cones and
+      tape, and spotters positioned where the trainee has to notice them. The scenario has
+      to be readable according to the placement of the trainee, accounting for any possible
+      movement or change of spatial location.
+    </p>
+    <p>
+      The lighting is flat and even on purpose. A stronger key would throw the exclusion
+      zone into shadow and cost the trainee the thing they are being asked to spot.
+    </p>
+
+    <figure>
+      <span class="shot">
+        <img class="zoomable" src="../../media/ebs-lift-wide.jpg"
+             alt="Wide view of the same lift scene showing the full site, shed and boundary"
+             data-caption="The wider scene: full exclusion zone and site boundary.">
+      </span>
+      <figcaption>The wider scene: full exclusion zone, site boundary and approach.</figcaption>
+    </figure>
+
+    <div class="pair">
+      <figure>
+        <span class="shot">
+          <img class="zoomable" src="../../media/ebs-scene-wire.jpg"
+               alt="The same scene with wireframe drawn over the shaded geometry"
+               data-caption="Scene wireframe. The density goes where the trainee looks.">
+        </span>
+        <figcaption>Wireframe over the shaded scene. The density goes where the trainee looks.</figcaption>
+      </figure>
+      <figure>
+        <span class="shot">
+          <img class="zoomable" src="../../media/ebs-scene-clay.jpg"
+               alt="Untextured clay render of the scene showing form and silhouette"
+               data-caption="Clay pass. Silhouette and proportion before material work.">
+        </span>
+        <figcaption>Clay pass. Silhouette and proportion before material work.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>Asset</h2>
+    <h3>Mobile crane</h3>
+    <p>
+      The hero prop for the scene, modelled from reference of a Liebherr LTM class
+      all-terrain crane.
+    </p>
+
+    <figure>
+      <span class="shot">
+        <img class="zoomable" src="../../media/ebs-crane-sheet.jpg"
+             alt="Breakdown sheet for the mobile crane: wireframe, clay, UV layout and final textured render"
+             data-caption="Mobile crane. Wireframe, clay, UV layout and final.">
+      </span>
+      <figcaption>Wireframe, clay, UV layout and the final textured render.</figcaption>
+    </figure>
+
+    <!-- TURNTABLE SLOT
+         Drop the clip in with the pipeline that already exists. It produces the mp4, the
+         webm and the poster, in the right folder and under the right names:
+
+             ./tools/convert.sh loop "J:/path/to/turntable.mp4" ebs-crane-turntable
+
+         then delete this comment and uncomment the block below. preload="none" so it
+         costs nothing until it is scrolled to; muted and playsinline are both required or
+         the browser refuses to play it at all. webm is listed first because VP9 is usually
+         the smaller of the two, but check what convert.sh reports: on a fast turntable
+         x264 sometimes wins, and then the mp4 <source> goes first instead.
+
+    <figure>
+      <span class="shot">
+        <video muted loop playsinline autoplay preload="none"
+               poster="../../media/ebs-crane-turntable-poster.jpg"
+               style="width:100%;height:auto;display:block;">
+          <source src="../../media/ebs-crane-turntable.webm" type="video/webm">
+          <source src="../../media/ebs-crane-turntable.mp4" type="video/mp4">
+        </video>
+      </span>
+      <figcaption>Turntable.</figcaption>
+    </figure>
+    -->
+  </section>
+
+  <footer>
+    <a class="back" href="../../">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      Back to all work
+    </a>
+  </footer>
+
+</div>
+
+<dialog id="lightbox" aria-label="Enlarged image">
+  <button id="lightbox-close" type="button" aria-label="Close">&times;</button>
+  <div id="lightbox-content"></div>
+  <p id="lightbox-caption"></p>
+</dialog>
+
+<script>
+/* Theme toggle. The button label shows the mode you would switch TO. Same behaviour and
+   the same localStorage key as the index, so the choice carries across both pages. */
+(function () {
+  var btn = document.getElementById('theme-toggle');
+  if (!btn) return;
+  var root = document.documentElement;
+
+  function sync() {
+    var dark = root.getAttribute('data-theme') === 'dark';
+    btn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+    btn.setAttribute('aria-pressed', String(dark));
+  }
+
+  btn.addEventListener('click', function () {
+    var dark = root.getAttribute('data-theme') === 'dark';
+    if (dark) { root.removeAttribute('data-theme'); }
+    else       { root.setAttribute('data-theme', 'dark'); }
+    try { localStorage.setItem('theme', dark ? 'light' : 'dark'); } catch (e) {}
+    sync();
+  });
+
+  sync();
+})();
+</script>
+
+<script>
+/* Click to enlarge. Clones the clicked element into a native <dialog>, so ESC, backdrop
+   dismissal and focus trapping are all handled by the browser. Lifted from the index,
+   with two changes: the video branch is gone until the turntable goes in, and the caption
+   falls back by walking up to the enclosing <figure>, because here the images sit inside
+   a <span class="shot"> and the figcaption is a level further out than on the index. */
+(function () {
+  var dlg = document.getElementById('lightbox');
+  if (!dlg || !dlg.showModal) return;
+  var box = document.getElementById('lightbox-content');
+  var cap = document.getElementById('lightbox-caption');
+
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('.zoomable');
+    if (el) {
+      var big = el.cloneNode(true);
+      big.classList.remove('zoomable');
+      box.replaceChildren(big);
+      var fig = el.closest('figure');
+      var figcap = fig && fig.querySelector('figcaption');
+      cap.textContent = el.dataset.caption || (figcap ? figcap.textContent.trim() : '');
+      dlg.showModal();
+      return;
+    }
+    if (e.target === dlg || e.target.id === 'lightbox-close') dlg.close();
+  });
+
+  dlg.addEventListener('close', function () { box.replaceChildren(); cap.textContent = ''; });
+})();
+</script>
+
+</body>
+</html>
