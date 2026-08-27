@@ -458,7 +458,7 @@
 <nav>
   <div class="wrap nav-inner">
     <ul>
-      <li><a href="#realtime">3D</a></li>
+      <li><a href="#3d">3D</a></li>
       <li><a href="#software">Software</a></li>
       <li><a href="#hardware">Hardware</a></li>
       <li><a href="#about">About</a></li>
@@ -481,10 +481,13 @@
 </nav>
 
 <!-- ============================================================
-     3D  ->  link the 3D CV at vonkagaoan.com/#realtime (id kept, label shortened)
+     3D  ->  link the 3D CV at vonkagaoan.com/#3d
+     NB: the id starts with a digit. That is legal HTML and anchor jumps work, but "#3d"
+     is NOT a valid CSS selector, so querySelector throws on it. The scrollspy uses
+     getElementById for exactly this reason. Do not "tidy" it back to querySelector.
 ============================================================ -->
 <div class="wrap">
-<section id="realtime">
+<section id="3d">
   <h2>3D</h2>
   <p class="section-intro">
     Environments, assets and animation built in game engines for VR, alongside photoreal
@@ -738,8 +741,9 @@
          A closing line about learning by doing was tried three ways and cut every time.
          The projects above demonstrate it; saying it as well only ever read as filler. -->
     <p>
-      Roughly ten years in 3D, based in Auckland. Character animation for television
-      commercials to start with, four years teaching it, then real-time and XR.
+      Roughly ten years in 3D, based in Auckland. Work spanning character animation for
+      television commercials, virtual reality and real-time, alongside four years teaching
+      animation.
     </p>
     <p>
       At heart I like making things, whether that is building and tinkering with something
@@ -767,7 +771,9 @@
   var links = [].slice.call(document.querySelectorAll('nav a[href^="#"]'));
   var items = [];
   links.forEach(function (a) {
-    var el = document.querySelector(a.getAttribute('href'));
+    // getElementById rather than querySelector: an id may legally begin with a digit,
+    // as #3d does, but that is not a valid CSS selector and querySelector throws on it.
+    var el = document.getElementById(a.getAttribute('href').slice(1));
     if (el) items.push({ a: a, el: el });
   });
   if (!items.length) return;
