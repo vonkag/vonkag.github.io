@@ -347,13 +347,15 @@
      whole thing scales together and the crop on the video stays put at under a tenth of
      its width instead of drifting with the viewport. */
   .mata-row{
-    display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:10px;
+    display:grid;grid-template-columns:1.4fr 3fr;gap:10px;
   }
+  .mata-row .shots{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
   /* margin:0 matters: the reel pane is a <figure>, and the browser default of
      1em 40px was quietly stealing 80px of its width inside the grid track. */
   .mata-row .pane{background:var(--card);border-radius:4px;overflow:hidden;margin:0;}
   .mata-row .shot{aspect-ratio:3/4;}
-  .mata-row .reel{grid-column:1;grid-row:1/span 2;}
+  /* the reel stretches to whatever height the frames settle on, so the block ends flush */
+  .mata-row .reel{grid-column:1;}
   .mata-row img,.mata-row video{
     width:100%;height:100%;object-fit:cover;display:block;
   }
@@ -378,10 +380,19 @@
     .mata-row .reel figcaption{transition:none;}
   }
 
-  /* on a phone the reel takes the full width and the frames pair up underneath it */
   @media (max-width:720px){
-    .mata-row{grid-template-columns:repeat(2,1fr);}
-    .mata-row .reel{grid-column:1/-1;grid-row:auto;aspect-ratio:9/16;}
+    /* Stacked, these rows made the card enormous and buried everything below the fold.
+       Same mechanics as the TallyToo carousel: native scroll-snap, so the swipe, the
+       momentum and the snap all come from the browser rather than from script. 68% shows
+       one frame and a slice of the next, which is what signals it can be swiped at all. */
+    .mata-row{grid-template-columns:1fr;}
+    .mata-row .reel{grid-column:1;aspect-ratio:9/16;}
+    .mata-row .shots,.portrait-row{
+      display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;
+      scrollbar-width:none;-webkit-overflow-scrolling:touch;
+    }
+    .mata-row .shots::-webkit-scrollbar,.portrait-row::-webkit-scrollbar{display:none;}
+    .mata-row .shot,.portrait-row .pane{flex:0 0 auto;width:68%;scroll-snap-align:start;}
   }
 
   /* triptych is 1260x746, a touch wider than 16:9, so contain rather than crop the
@@ -774,18 +785,22 @@
                through to the enlarged view with no extra wiring. -->
           <figcaption>Instagram, @vonkagaoan</figcaption>
         </figure>
-        <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-frame-1.jpg"
-             alt="Frame shot on Mata Cam" data-caption="Shot on Mata Cam"></div>
-        <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-frame-2.jpg"
-             alt="Frame shot on Mata Cam" data-caption="Shot on Mata Cam"></div>
-        <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-frame-3.jpg"
-             alt="Frame shot on Mata Cam" data-caption="Shot on Mata Cam"></div>
-        <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-frame-4.jpg"
-             alt="Frame shot on Mata Cam" data-caption="Shot on Mata Cam"></div>
-        <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-frame-5.jpg"
-             alt="Frame shot on Mata Cam" data-caption="Shot on Mata Cam"></div>
-        <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-frame-6.jpg"
-             alt="Frame shot on Mata Cam" data-caption="Shot on Mata Cam"></div>
+        <!-- The frames sit in their own box so they can become one swipeable
+             row on a phone without dragging the reel along with them. -->
+        <div class="shots">
+          <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-frame-1.jpg"
+               alt="Frame shot on Mata Cam" data-caption="Shot on Mata Cam"></div>
+          <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-frame-2.jpg"
+               alt="Frame shot on Mata Cam" data-caption="Shot on Mata Cam"></div>
+          <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-frame-3.jpg"
+               alt="Frame shot on Mata Cam" data-caption="Shot on Mata Cam"></div>
+          <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-frame-4.jpg"
+               alt="Frame shot on Mata Cam" data-caption="Shot on Mata Cam"></div>
+          <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-frame-5.jpg"
+               alt="Frame shot on Mata Cam" data-caption="Shot on Mata Cam"></div>
+          <div class="pane shot"><img class="zoomable" loading="lazy" src="media/mata-frame-6.jpg"
+               alt="Frame shot on Mata Cam" data-caption="Shot on Mata Cam"></div>
+        </div>
       </div>
       <div class="body">
         <h3>Mata Cam</h3>
