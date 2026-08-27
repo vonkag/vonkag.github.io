@@ -328,8 +328,18 @@
   /* when the grid sits under a hero rather than at the top of the card, it needs the
      same gap off the hero as the tiles have between themselves */
   .card .media + .tiles{margin-top:12px;}
+  /* Phone: the tile row swipes rather than stacking into three full-width blocks. Same
+     mechanics as .portrait-row and the Mata frames: native scroll-snap, so the swipe, the
+     momentum and the snap all come from the browser. 68% puts one tile and a slice of the
+     next on screen, and that peek is the only thing signalling the row can be swiped.
+     min-width:0 lets the row shrink under its content inside the card. */
   @media (max-width:720px){
-    .tiles{grid-template-columns:1fr;}
+    .tiles{
+      display:flex;gap:12px;min-width:0;overflow-x:auto;
+      scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+    }
+    .tiles::-webkit-scrollbar{display:none;}
+    .tile{flex:0 0 auto;width:68%;scroll-snap-align:start;}
   }
   .tile{
     position:relative;aspect-ratio:16/9;overflow:hidden;border-radius:4px;
@@ -1081,6 +1091,17 @@
     var r = el.getBoundingClientRect();
     return Math.abs((r.top + r.bottom) / 2 - viewH() / 2);
   }
+  /* Tiles need both axes. On the phone the row scrolls sideways, so every tile shares a
+     vertical centre and vertical distance alone would hand it to the first one every time,
+     whichever tile you had actually swiped to. On the desktop grid the auto-pick never
+     runs at all, because hover drives it there, so measuring both costs nothing. */
+  function tileDist(el) {
+    var r = el.getBoundingClientRect();
+    var vw = window.innerWidth || document.documentElement.clientWidth;
+    var dy = (r.top + r.bottom) / 2 - viewH() / 2;
+    var dx = (r.left + r.right) / 2 - vw / 2;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
 
   /* --- players: one shape for a <video> and for the Vimeo iframe --- */
   function nativePlayer(v) {
@@ -1167,7 +1188,7 @@
         if (!pick) {
           g.players.forEach(function (p) {
             if (seen(p.el) <= 0) return;
-            var d = centreDist(p.el);
+            var d = tileDist(p.el);
             if (d < best) { best = d; pick = p; }
           });
         }
@@ -1262,6 +1283,11 @@
   }
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll);
+  // Swiping the tile row sideways does not move the window, so without this the playing
+  // tile would stay put while the row moved under it.
+  [].forEach.call(document.querySelectorAll('.tiles'), function (row) {
+    row.addEventListener('scroll', onScroll, { passive: true });
+  });
   document.addEventListener('visibilitychange', function () {
     if (document.hidden) {
       if (current) current.stop();
