@@ -391,6 +391,12 @@
 
   /* inline link icons: currentColor so they follow the theme, 1em so they follow type size */
   .ico{width:1em;height:1em;vertical-align:-0.14em;margin-right:.45em;flex:none;}
+  /* Icon-only links. Three things assumed a label: the underline has nothing to sit under,
+     the icon trailing margin has nothing to space away from, and a 1em hit area is small for
+     a thumb, hence the padding. The accessible name moves to aria-label, because the svg is
+     aria-hidden and stripping the text would leave a link that announces as nothing. */
+  .meta a.icon-only,.links a.icon-only{border-bottom:0;padding:3px;}
+  .icon-only .ico{margin-right:0;width:1.15em;height:1.15em;}
 
   /* ---------- carousel ----------
      Built on native scroll-snap rather than transforms, so touch swipe, momentum and
@@ -506,9 +512,8 @@
     <div class="meta">
       <a href="mailto:vonkagaoan@gmail.com"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M3.2 7.2 12 13l8.8-5.8"/></svg>vonkagaoan@gmail.com</a>
       <span class="sep">·</span>
-      <a href="https://instagram.com/vonkagaoan"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>Instagram</a>
-      <span class="sep">·</span>
-      <a href="https://nz.linkedin.com/in/von-kagaoan-18b624118"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="7.6" cy="8" r="1.05" fill="currentColor" stroke="none"/><path d="M7.6 11.4v5.4"/><path d="M11.6 16.8v-5.4"/><path d="M11.6 13.7a2.4 2.4 0 0 1 4.8 0v3.1"/></svg>LinkedIn</a>
+      <a href="https://instagram.com/vonkagaoan" class="icon-only" aria-label="Instagram" title="Instagram"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg></a>
+      <a href="https://nz.linkedin.com/in/von-kagaoan-18b624118" class="icon-only" aria-label="LinkedIn" title="LinkedIn"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="7.6" cy="8" r="1.05" fill="currentColor" stroke="none"/><path d="M7.6 11.4v5.4"/><path d="M11.6 16.8v-5.4"/><path d="M11.6 13.7a2.4 2.4 0 0 1 4.8 0v3.1"/></svg></a>
 </div>
   </header>
 </div>
@@ -824,8 +829,8 @@
   <div class="links">
     <a href="mailto:vonkagaoan@gmail.com"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M3.2 7.2 12 13l8.8-5.8"/></svg>vonkagaoan@gmail.com</a>
     <!-- <a href="https://github.com/vonkag">GitHub</a> -->
-    <a href="https://instagram.com/vonkagaoan"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>Instagram</a>
-    <a href="https://nz.linkedin.com/in/von-kagaoan-18b624118"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="7.6" cy="8" r="1.05" fill="currentColor" stroke="none"/><path d="M7.6 11.4v5.4"/><path d="M11.6 16.8v-5.4"/><path d="M11.6 13.7a2.4 2.4 0 0 1 4.8 0v3.1"/></svg>LinkedIn</a>
+    <a href="https://instagram.com/vonkagaoan" class="icon-only" aria-label="Instagram" title="Instagram"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg></a>
+    <a href="https://nz.linkedin.com/in/von-kagaoan-18b624118" class="icon-only" aria-label="LinkedIn" title="LinkedIn"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="7.6" cy="8" r="1.05" fill="currentColor" stroke="none"/><path d="M7.6 11.4v5.4"/><path d="M11.6 16.8v-5.4"/><path d="M11.6 13.7a2.4 2.4 0 0 1 4.8 0v3.1"/></svg></a>
   </div>
 </section>
 </div>
