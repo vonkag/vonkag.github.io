@@ -272,6 +272,9 @@
     color:var(--muted);font-size:12px;letter-spacing:.1em;text-transform:uppercase;
   }
   .card video,.card img{width:100%;height:100%;object-fit:cover;display:block;}
+  /* a card whose media links somewhere: the anchor has to fill the box, or as a flex
+     item with no height of its own the image inside it collapses to nothing. */
+  .card .media a{display:block;width:100%;height:100%;}
   .card .body{padding:14px 0 0;}
   /* project titles take the display face too. The kicker and body under them stay Inter,
      which is what stops the page reading as a poster. */
@@ -301,6 +304,9 @@
     display:grid;grid-template-columns:repeat(3,1fr);
     gap:12px;margin:0;padding:0;list-style:none;
   }
+  /* when the grid sits under a hero rather than at the top of the card, it needs the
+     same gap off the hero as the tiles have between themselves */
+  .card .media + .tiles{margin-top:12px;}
   @media (max-width:720px){
     .tiles{grid-template-columns:1fr;}
   }
@@ -607,6 +613,15 @@
   <div class="grid">
 
     <article class="card feature">
+      <!-- Hero above the tile grid. It is a still rather than a hover-to-play loop
+           because it links through to the case study, and a tile that plays under the
+           cursor competes with the click that is the point of it. -->
+      <div class="media">
+        <a href="work/energy-based-safety/">
+          <img src="media/ebs-hero.jpg"
+               alt="Mobile crane lifting a steel vat tank inside a coned exclusion zone, from the Energy Based Safety VR training">
+        </a>
+      </div>
     <ul class="tiles">
       <li class="tile" tabindex="0">
         <video class="zoomable" muted loop playsinline preload="none" poster="media/m1-platform-overview-poster.jpg">
@@ -630,7 +645,10 @@
       <div class="body">
         <h3>Energy Based Safety (EBS) VR training</h3>
         <p class="kicker">Three modules · captured in headset</p>
-        <ul class="stack"><li>Unity</li><li>Environment art</li><li>Real-time</li><li>Lighting</li></ul>
+        <ul class="stack"><li>Unity</li><li>VR</li><li>Environment art</li><li>Real-time</li><li>Lighting</li></ul>
+        <div class="links">
+          <a href="work/energy-based-safety/">Case study &rarr;</a>
+        </div>
       </div>
     </article>
 
@@ -652,7 +670,7 @@
              these were real telco clients. That is the one thing the video cannot say
              for itself. -->
         <p class="kicker">VR environment · brands shown are mock-ups</p>
-        <ul class="stack"><li>Unity</li><li>Environment art</li><li>Real-time</li><li>Lighting</li></ul>
+        <ul class="stack"><li>Unity</li><li>VR</li><li>Environment art</li><li>Real-time</li><li>Lighting</li></ul>
       </div>
     </article>
 
@@ -760,8 +778,7 @@
         <h3>TallyToo</h3>
         <p class="kicker">Tally tracking app, <a href="https://play.google.com/store/apps/details?id=com.vonimatic.tallytoo"><svg class="ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.3 1.9c-.2.2-.3.5-.3.9v18.4c0 .4.1.7.3.9l9.6-10.1L3.3 1.9z"/><path d="M14.1 13.1l2.5 2.6-10.9 6.2 8.4-8.8z"/><path d="M14.1 10.9L5.7 2.1l10.9 6.2-2.5 2.6z"/><path d="M17.9 9.1l2.8 1.6c.9.5.9 1.7 0 2.2l-2.8 1.6-2.6-2.7 2.6-2.7z"/></svg>live on Google Play</a></p>
         <p>
-          Designed, built and shipped solo, including the backend data model and the release
-          pipeline. Also built a companion dashboard that renders live tally data to a
+          Designed, built and shipped solo. Also built a companion dashboard that renders live tally data to a
           jailbroken Kindle over the local network, as a wall mounted e-ink display.
         </p>
         <ul class="stack"><li>React Native</li><li>Expo</li><li>TypeScript</li><li>Supabase</li></ul>
