@@ -196,6 +196,19 @@
     nav a{transition:none;}
   }
   .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;position:relative;}
+  /* Measured: four links plus the two tool buttons need 406px to hold one line, so a 360px
+     phone was 46px short and About dropped to a second row. Tighter type and a smaller gap
+     buy back about 60px, which fits every current phone. nowrap with overflow is the
+     backstop below that: scrolling one line beats wrapping to two.
+     min-width:0 matters, or the ul refuses to shrink under its content as a flex item. */
+  @media (max-width:720px){
+    nav ul{
+      flex-wrap:nowrap;min-width:0;gap:14px;
+      overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+    }
+    nav ul::-webkit-scrollbar{display:none;}
+    nav a{font-size:11px;letter-spacing:.07em;}
+  }
   /* One bar that slides between links, rather than an underline blinking on and off under
      each one. Out of flow, so it does not disturb the flex row it sits in. */
   .nav-marker{
@@ -668,7 +681,7 @@
 <section id="software">
   <h2>Software</h2>
   <p class="section-intro">
-    Things I built because I wanted them to exist. Designed, built and shipped solo.
+    Things I built because I wanted them to exist.
   </p>
 
   <div class="grid">
