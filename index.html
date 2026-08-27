@@ -13,6 +13,33 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="description" content="Real-time 3D, software and hardware. Auckland, New Zealand.">
 
+<!-- Canonical: tells Google this is the one true address for the page, so nothing else
+     that mirrors it can split the ranking signal. -->
+<link rel="canonical" href="https://vonkag.github.io/">
+
+<!-- Structured data. This is the bit that lets Google understand the page is ABOUT a
+     person rather than just containing a name, which is what a search for "Von Kagaoan"
+     needs. sameAs is how it ties this page to the same person's other profiles. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Von Kagaoan",
+  "url": "https://vonkag.github.io/",
+  "description": "Real-time 3D, software and hardware. Auckland, New Zealand.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Auckland",
+    "addressCountry": "NZ"
+  },
+  "knowsAbout": ["Real-time 3D", "Virtual reality", "Unity", "Blender", "Firmware", "React Native"],
+  "sameAs": [
+    "https://instagram.com/vonkagaoan",
+    "https://github.com/vonkag"
+  ]
+}
+</script>
+
 <!-- Fetched in parallel with the CSS instead of after it. crossorigin is required on font
      preloads even for same-origin files, or the browser fetches them twice. -->
 <link rel="preload" href="fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -24,6 +51,7 @@
 <meta property="og:title" content="Von Kagaoan">
 <meta property="og:description" content="Real-time 3D, software and hardware. Auckland, New Zealand.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://vonkag.github.io/">
 <!-- <meta property="og:image" content="https://vonkagaoan.com/media/og.jpg"> -->
 
 <style>
