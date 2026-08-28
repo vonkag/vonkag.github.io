@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Energy Based Safety, VR training — Von Kagaoan</title>
+<title>Industrial VR safety training — Von Kagaoan</title>
 
 <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
 <link rel="icon" href="../../favicon.ico" sizes="32x32">
 <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
-<meta name="description" content="Environment and asset work for Energy Based Safety, a VR training product built in Unity for Meta Quest.">
-<link rel="canonical" href="https://vonkag.github.io/work/energy-based-safety/">
+<meta name="description" content="Environment and asset work for an industrial VR safety training product built in Unity for Meta Quest.">
+<link rel="canonical" href="https://vonkag.github.io/work/vr-safety-training/">
 
 <!-- Open Graph. This is the whole reason the case study is its own page rather than a
      panel on the index: pasted into an email or a LinkedIn message it unfurls with the
      crane shot instead of a bare domain. The URL has to be absolute, a relative one will
      not resolve on the scraper's end. -->
-<meta property="og:title" content="Energy Based Safety, VR training">
-<meta property="og:description" content="Environment and asset work for a VR safety training product built in Unity for Meta Quest.">
+<meta property="og:title" content="Industrial VR safety training">
+<meta property="og:description" content="Environment and asset work for an industrial VR safety training product built in Unity for Meta Quest.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://vonkag.github.io/work/energy-based-safety/">
-<meta property="og:image" content="https://vonkag.github.io/media/ebs-hero.jpg">
+<meta property="og:url" content="https://vonkag.github.io/work/vr-safety-training/">
+<meta property="og:image" content="https://vonkag.github.io/media/safety-hero.jpg">
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="preload" href="../../fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -232,7 +232,7 @@
   </div>
 
   <header>
-    <h1>Energy Based Safety</h1>
+    <h1>Industrial VR safety training</h1>
     <p class="kicker">VR training &middot; environment and asset work</p>
 
     <dl class="spec">
@@ -246,7 +246,7 @@
 
 <figure class="hero">
   <span class="shot">
-    <img class="zoomable" src="../../media/ebs-hero.jpg"
+    <img class="zoomable" src="../../media/safety-hero.jpg"
          alt="VR training scene: a mobile crane lifting a steel vat tank inside a coned exclusion zone, with three workers in hi-vis looking on"
          data-caption="Vat tank lift. Real-time render in Unity.">
   </span>
@@ -258,9 +258,9 @@
   <section>
     <h2>Overview</h2>
     <p>
-      The VR training focuses on Energy Based Safety, including the application of the
-      Energy Wheel framework. Trainees work through hazard scenarios in a headset rather
-      than off a slide deck or filling in forms.
+      The training covers hazardous-energy safety and the framework used to identify and
+      control energy sources on a site. Trainees work through hazard scenarios in a headset
+      rather than off a slide deck or filling in forms.
     </p>
     <p>
       I built the entire environment, from layout to modelling and lighting.
@@ -283,7 +283,7 @@
 
     <figure>
       <span class="shot">
-        <img class="zoomable" src="../../media/ebs-lift-wide.jpg"
+        <img class="zoomable" src="../../media/safety-lift-wide.jpg"
              alt="Wide view of the same lift scene showing the full site, shed and boundary"
              data-caption="The wider scene: full exclusion zone and site boundary.">
       </span>
@@ -293,7 +293,7 @@
     <div class="pair">
       <figure>
         <span class="shot">
-          <img class="zoomable" src="../../media/ebs-scene-wire.jpg"
+          <img class="zoomable" src="../../media/safety-scene-wire.jpg"
                alt="The same scene with wireframe drawn over the shaded geometry"
                data-caption="Scene wireframe. The density goes where the trainee looks.">
         </span>
@@ -301,7 +301,7 @@
       </figure>
       <figure>
         <span class="shot">
-          <img class="zoomable" src="../../media/ebs-scene-clay.jpg"
+          <img class="zoomable" src="../../media/safety-scene-clay.jpg"
                alt="Untextured clay render of the scene showing form and silhouette"
                data-caption="Clay pass. Silhouette and proportion before material work.">
         </span>
@@ -320,7 +320,7 @@
 
     <figure>
       <span class="shot">
-        <img class="zoomable" src="../../media/ebs-crane-sheet.jpg"
+        <img class="zoomable" src="../../media/safety-crane-sheet.jpg"
              alt="Breakdown sheet for the mobile crane: wireframe, clay, UV layout and final textured render"
              data-caption="Mobile crane. Wireframe, clay, UV layout and final.">
       </span>
@@ -331,7 +331,7 @@
          Drop the clip in with the pipeline that already exists. It produces the mp4, the
          webm and the poster, in the right folder and under the right names:
 
-             ./tools/convert.sh loop "J:/path/to/turntable.mp4" ebs-crane-turntable
+             ./tools/convert.sh loop "J:/path/to/turntable.mp4" safety-crane-turntable
 
          then delete this comment and uncomment the block below. preload="none" so it
          costs nothing until it is scrolled to; muted and playsinline are both required or
@@ -342,10 +342,10 @@
     <figure>
       <span class="shot">
         <video muted loop playsinline autoplay preload="none"
-               poster="../../media/ebs-crane-turntable-poster.jpg"
+               poster="../../media/safety-crane-turntable-poster.jpg"
                style="width:100%;height:auto;display:block;">
-          <source src="../../media/ebs-crane-turntable.webm" type="video/webm">
-          <source src="../../media/ebs-crane-turntable.mp4" type="video/mp4">
+          <source src="../../media/safety-crane-turntable.webm" type="video/webm">
+          <source src="../../media/safety-crane-turntable.mp4" type="video/mp4">
         </video>
       </span>
       <figcaption>Turntable.</figcaption>
