@@ -338,6 +338,23 @@
   /* when the grid sits under a hero rather than at the top of the card, it needs the
      same gap off the hero as the tiles have between themselves */
   .card .media + .tiles{margin-top:12px;}
+
+  /* ---------- tiles left, hero right ----------
+     The column ratio is not arbitrary. At the 1080px container with a 12px gap, 1fr : 3.18fr
+     puts the tile column at ~244px and the hero at ~776px. Three stacked 16:9 tiles plus two
+     12px gaps come to ~436px tall, and 776 x 9/16 is ~436 as well, so BOTH the hero and the
+     tiles keep their native 16:9 and the two columns finish flush. Nothing is cropped to make
+     it line up.
+     order:-1 puts the tiles first visually while the hero stays first in the source, which is
+     the order that reads correctly when this collapses to one column on a phone. */
+  @media (min-width:721px){
+    .ebs-row{display:grid;grid-template-columns:1fr 3.18fr;gap:12px;align-items:start;}
+    /* .card prefix is load-bearing: without it this loses on specificity to
+       `.card .media + .tiles{margin-top:12px}` above, which pushed the tile column
+       12px down and left the two columns finishing 11px apart. */
+    .card .ebs-row .tiles{grid-template-columns:1fr;order:-1;margin-top:0;}
+    .ebs-row .media.linked{margin:0;}
+  }
   /* Phone: the tile row swipes rather than stacking into three full-width blocks. Same
      mechanics as .portrait-row and the Mata frames: native scroll-snap, so the swipe, the
      momentum and the snap all come from the browser. 68% puts one tile and a slice of the
@@ -661,9 +678,12 @@
   <div class="grid">
 
     <article class="card feature">
-      <!-- Hero above the tile grid. It is a still rather than a hover-to-play loop
-           because it links through to the case study, and a tile that plays under the
-           cursor competes with the click that is the point of it. -->
+      <!-- Tiles left, hero right. The hero is a still rather than a loop because it links
+           through to the case study, and a tile playing under the cursor competes with the
+           click that is the point of it.
+           Source order is hero-then-tiles because that is the reading order when this
+           collapses to one column on a phone; the grid puts the tiles first on desktop. -->
+      <div class="ebs-row">
       <figure class="media linked">
         <a href="work/vr-safety-training/">
           <img src="media/safety-hero.jpg"
@@ -691,6 +711,7 @@
         <figcaption>Roadworks and traffic management</figcaption>
       </li>
     </ul>
+      </div>
       <div class="body">
         <h3>Industrial VR safety training</h3>
         <p class="kicker">Three modules · captured in headset</p>
@@ -1219,8 +1240,12 @@
       // a full-width piece should have the page's attention before it starts; a small
       // tile only needs to be properly on screen
       needs: tiles ? 0.6 : 0.92,
-      // on a mouse the tile grid is hover-driven, so it never starts by itself
-      manual: tiles && canHover,
+      // The tile grid used to be hover-only on a mouse, which meant a visitor who did not
+      // think to hover saw three still posters and no evidence anything moved. It now joins
+      // the ambient rotation like every other card: when it is the card nearest the middle of
+      // the screen, g.start() picks the tile nearest the centre and plays that ONE. Hovering
+      // still wins, because mouseenter calls lock().
+      manual: false,
       active: null
     };
 
