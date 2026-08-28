@@ -751,19 +751,27 @@
       </div>
     </article>
 
-    <!-- HD 6XX. Deliberately quieter than the keyboard card above it, and the mechanism is
-         motion rather than size: MX has two auto-playing loops, this has none. On a page where
-         one card plays at a time, a stills-only card cannot compete for attention no matter how
-         large it is. Three equal squares rather than a hero plus supports, so nothing inside it
-         dominates either. -->
+    <!-- HD 6XX. Still deliberately quieter than the keyboard card above it, but the mechanism
+         changed when the turntable went in: MX carries TWO loops against one here, and this card
+         is stills-dominant where MX is motion-dominant. It also lands shorter, because square
+         panes are shorter than the 3:4 ones above.
+         The loop sits in the MIDDLE pane on purpose. Leading with it would pull the eye to this
+         card before the keyboard, which is the thing being avoided; flanked by two stills it
+         reads as one set rather than as a video with two thumbnails beside it.
+         mp4 only, no webm: convert.sh reported the webm came out more than twice the size on
+         this clip, and its own advice is to ship the mp4 alone when that happens. -->
     <article class="card feature">
       <div class="portrait-row square">
         <div class="pane"><img class="zoomable" src="media/hd6xx-01.jpg"
              alt="Product render of HD 6XX headphones, three-quarter view"
              data-caption="HD 6XX, three-quarter"></div>
-        <div class="pane"><img class="zoomable" src="media/hd6xx-02.jpg"
-             alt="Product render of HD 6XX headphones, front view showing the earpads and headband"
-             data-caption="HD 6XX, front"></div>
+        <div class="pane">
+          <video class="zoomable" muted loop playsinline preload="none"
+                 poster="media/hd6xx-turntable-poster.jpg"
+                 data-caption="HD 6XX, turntable">
+            <source src="media/hd6xx-turntable.mp4" type="video/mp4">
+          </video>
+        </div>
         <div class="pane"><img class="zoomable" src="media/hd6xx-03.jpg"
              alt="Product render of HD 6XX headphones, profile view showing the open grille"
              data-caption="HD 6XX, profile"></div>
