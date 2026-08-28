@@ -487,9 +487,14 @@
     scroll-snap-align:start;background:var(--card);border-radius:4px;overflow:hidden;
   }
   .carousel img{width:100%;height:100%;object-fit:cover;display:block;}
-  /* on a phone, show one and a peek of the next so it reads as scrollable */
+  /* On a phone these were 78% wide at 9:16, which on a 390px screen renders about
+     267x474 and eats most of the viewport for one screenshot. 52% is not arbitrary: it
+     makes them the same rendered HEIGHT as the 3:4 panes in .portrait-row further up the
+     page, so the two image strips finally agree with each other. Still shows one full
+     pane and most of the next, so it reads as swipeable. Legibility at this size does not
+     matter much: every pane is .zoomable, so a tap opens it full size in the lightbox. */
   @media (max-width:720px){
-    .carousel .pane{width:78%;}
+    .carousel .pane{width:52%;}
   }
 
   /* Arrows. Hidden until the script adds .has-controls, because without JS they would
