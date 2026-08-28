@@ -383,6 +383,8 @@
   }
   /* phone screenshots are 9:16, taller than the keyboard renders */
   .portrait-row.tall .pane{aspect-ratio:9/16;}
+  /* the headphone renders were framed square */
+  .portrait-row.square .pane{aspect-ratio:1/1;}
   .portrait-row img,.portrait-row video{
     width:100%;height:100%;object-fit:cover;display:block;
   }
@@ -746,6 +748,30 @@
         <h3>MX Mechanical Mini</h3>
         <p class="kicker">Personal work · final render, breakdown, wireframe</p>
         <ul class="stack"><li>Blender</li><li>Modelling</li><li>Materials</li><li>Lighting</li></ul>
+      </div>
+    </article>
+
+    <!-- HD 6XX. Deliberately quieter than the keyboard card above it, and the mechanism is
+         motion rather than size: MX has two auto-playing loops, this has none. On a page where
+         one card plays at a time, a stills-only card cannot compete for attention no matter how
+         large it is. Three equal squares rather than a hero plus supports, so nothing inside it
+         dominates either. -->
+    <article class="card feature">
+      <div class="portrait-row square">
+        <div class="pane"><img class="zoomable" src="media/hd6xx-01.jpg"
+             alt="Product render of HD 6XX headphones, three-quarter view"
+             data-caption="HD 6XX, three-quarter"></div>
+        <div class="pane"><img class="zoomable" src="media/hd6xx-02.jpg"
+             alt="Product render of HD 6XX headphones, front view showing the earpads and headband"
+             data-caption="HD 6XX, front"></div>
+        <div class="pane"><img class="zoomable" src="media/hd6xx-03.jpg"
+             alt="Product render of HD 6XX headphones, profile view showing the open grille"
+             data-caption="HD 6XX, profile"></div>
+      </div>
+      <div class="body">
+        <h3>HD 6XX</h3>
+        <p class="kicker">Personal work &middot; product render study</p>
+        <ul class="stack"><li>Blender</li><li>Hard surface</li><li>Materials</li><li>Lighting</li></ul>
       </div>
     </article>
 
