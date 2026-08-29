@@ -159,15 +159,14 @@
   a{color:inherit;}
 
   /* ---------- header ----------
-     The name and the contact icons share a line, icons to the right of the title.
-     align-items:center, NOT baseline. Baseline looks like the right answer and is not: these
-     flex children are icon-only links with no text, so their baseline resolves to the bottom
-     margin edge, which measured 11px below the H1 baseline and read as sagging. Centring on
-     the line box lands within about 5px of the optical centre of the caps and, unlike a tuned
-     nudge, holds as the H1 scales from 54px down to 34px.
-     flex-wrap so they drop under the name if the viewport cannot hold both.
+     The name owns its own line; the role and the contact icons share the one below it.
+     Pairing the icons with the role rather than the H1 also sidesteps the alignment problem
+     that arrangement had: against a 54px title, icon-only links have no text baseline to
+     align to and sat 11px low. Against a 15-17px role line the two are near enough the same
+     size that centring is simply correct.
      Bottom padding down from 26px to 12px to close the gap to the nav bar. */
-  header{padding:64px 0 12px;display:flex;flex-wrap:wrap;align-items:center;gap:0 18px;}
+  header{padding:64px 0 12px;}
+  .header-line{display:flex;flex-wrap:wrap;align-items:center;gap:2px 16px;margin-top:8px;}
   h1{
     font-family:var(--display);
     /* condensed type reads smaller at a given size and needs less tracking than Inter did
@@ -176,7 +175,7 @@
     letter-spacing:.035em;font-weight:800;text-transform:uppercase;
     line-height:1.05;margin:0;
   }
-  .role{color:var(--muted);margin:0 0 14px;font-size:clamp(15px,2vw,17px);}
+  .role{color:var(--muted);margin:0;font-size:clamp(15px,2vw,17px);}
   .meta{color:var(--muted);font-size:14px;display:flex;align-items:center;gap:14px;}
   .meta a{text-decoration:none;border-bottom:1px solid var(--rule);}
   .meta a:hover{border-bottom-color:var(--ink);}
@@ -617,13 +616,17 @@
 <div class="wrap">
   <header>
     <h1>Von Kagaoan</h1>
-    <!-- The subtitle stays out: it repeated the nav word for word. The .role style is
-         kept, so restoring it is a matter of uncommenting the line below.
-    <p class="role">Real-time 3D, software and hardware. Auckland, New Zealand.</p>
-    -->
+    <!-- The role line is back, reworded 2026-08-29. The version cut on 26 Aug read
+         "Real-time 3D, software and hardware" against a nav of 3D / SOFTWARE / HARDWARE,
+         which was the nav word for word. This one names two roles instead of three
+         subject areas, so it says something the nav does not. "Technical generalist" is
+         the same descriptor the technical CV settled on, so the two agree.
+         Middot, not a pipe: every other separator on this page is a middot. -->
     <!-- Contact restored 2026-08-27, having been cut on 26 Aug as a CV convention. It
          repeats the footer deliberately: someone who reads the top and leaves should not
          have to scroll the whole page to find a way to get in touch. -->
+    <div class="header-line">
+    <p class="role">3D Artist &middot; Technical Generalist</p>
     <div class="meta">
       <!-- Icon only up here; the address is spelled out in full in the footer. The
            separator went with the text: three icons in a row read better on an even gap
@@ -632,6 +635,7 @@
       <a href="https://instagram.com/vonkagaoan" class="icon-only" aria-label="Instagram" title="Instagram"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg></a>
       <a href="https://nz.linkedin.com/in/von-kagaoan-18b624118" class="icon-only" aria-label="LinkedIn" title="LinkedIn"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="7.6" cy="8" r="1.05" fill="currentColor" stroke="none"/><path d="M7.6 11.4v5.4"/><path d="M11.6 16.8v-5.4"/><path d="M11.6 13.7a2.4 2.4 0 0 1 4.8 0v3.1"/></svg></a>
 </div>
+    </div>
   </header>
 </div>
 
