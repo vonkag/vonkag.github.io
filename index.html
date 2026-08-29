@@ -46,6 +46,10 @@
 <link rel="preload" href="fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <!-- the H1 weight only. The 600 is for project titles further down and can wait. -->
 <link rel="preload" href="fonts/saira-cond-800-latin.woff2" as="font" type="font/woff2" crossorigin>
+<!-- The role line sits above the fold in the display face, so without this it renders in
+     Arial Narrow first and visibly swaps. The 600 is deliberately NOT preloaded: it is only
+     used by project titles further down the page. -->
+<link rel="preload" href="fonts/saira-cond-400-latin.woff2" as="font" type="font/woff2" crossorigin>
 
 <!-- Open Graph: controls how the link previews when pasted into an email or a chat.
      Replace the og:image with a real 1200x630 jpg once you have one. -->
@@ -80,6 +84,26 @@
      the name and the project titles, so two static weights cover it and there is no need
      for the variable file. Vietnamese subset skipped; latin-ext is kept, it is what
      carries the macrons. */
+  /* 400 added 2026-08-29 for the role line. The repo only carried 600 and 800, and a
+     browser will happily fake BOLDER but never lighter, so "less bold than 600" needed a
+     real file. Saira Condensed is SIL OFL like Inter, so self-hosting it is fine. Same
+     unicode-range split and same naming as the two already here. */
+  @font-face{
+    font-family:'Saira Condensed';
+    font-style:normal;
+    font-weight:400;
+    font-display:swap;
+    src:url('fonts/saira-cond-400-latin-ext.woff2') format('woff2');
+    unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  @font-face{
+    font-family:'Saira Condensed';
+    font-style:normal;
+    font-weight:400;
+    font-display:swap;
+    src:url('fonts/saira-cond-400-latin.woff2') format('woff2');
+    unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
   @font-face{
     font-family:'Saira Condensed';
     font-style:normal;
@@ -180,11 +204,13 @@
      from body leaves the browser matching or synthesising a weight that was never shipped.
      Size drops a step, and a condensed face already reads smaller at a given size, so the
      two compound: enough of a reduction without going further.
+     font-weight:400 needed a font file that did not exist here - see the @font-face note
+     above. Tracking opens a touch at the lighter weight, which condensed faces want.
      opacity rather than a fainter colour token, so it fades identically in both themes.
      It is on .role alone, not .header-line, so the contact icons keep full contrast. */
   .role{
     font-family:var(--display);
-    font-weight:600;letter-spacing:.01em;
+    font-weight:400;letter-spacing:.015em;
     color:var(--muted);opacity:.75;
     margin:0;font-size:clamp(14px,1.9vw,16px);
   }
