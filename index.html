@@ -263,7 +263,15 @@
 
   /* nav is no longer sticky itself: the masthead around it is. It keeps the rule that
      separates the whole block from the content under it. */
-  nav{padding:0 0 16px;}
+  /* Expanded, the nav sits at the bottom of the row on the role line's baseline, so it
+     wants no top padding. Condensed, it is the only thing left in the bar and 0 top padding
+     put the links hard against the viewport edge. Padding is added back only in the
+     condensed state, and transitions with the collapse so it does not snap. */
+  nav{padding:0 0 16px;transition:padding-top .3s ease;}
+  .masthead.is-condensed nav{padding-top:14px;}
+  @media (prefers-reduced-motion: reduce){
+    nav{transition:none;}
+  }
   nav ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:22px;}
   nav a{
     text-decoration:none;font-size:12px;font-weight:700;
