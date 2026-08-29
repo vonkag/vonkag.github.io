@@ -175,7 +175,19 @@
     letter-spacing:.035em;font-weight:800;text-transform:uppercase;
     line-height:1.05;margin:0;
   }
-  .role{color:var(--muted);margin:0;font-size:clamp(15px,2vw,17px);}
+  /* Display face, to sit with the name rather than against it. font-weight:600 is
+     explicit and load-bearing: only the 600 and 800 Saira files exist, so inheriting 400
+     from body leaves the browser matching or synthesising a weight that was never shipped.
+     Size drops a step, and a condensed face already reads smaller at a given size, so the
+     two compound: enough of a reduction without going further.
+     opacity rather than a fainter colour token, so it fades identically in both themes.
+     It is on .role alone, not .header-line, so the contact icons keep full contrast. */
+  .role{
+    font-family:var(--display);
+    font-weight:600;letter-spacing:.01em;
+    color:var(--muted);opacity:.75;
+    margin:0;font-size:clamp(14px,1.9vw,16px);
+  }
   .meta{color:var(--muted);font-size:14px;display:flex;align-items:center;gap:14px;}
   .meta a{text-decoration:none;border-bottom:1px solid var(--rule);}
   .meta a:hover{border-bottom-color:var(--ink);}
