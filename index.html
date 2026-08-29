@@ -80,6 +80,48 @@
     unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
   }
 
+  /* Saira Semi Condensed, self-hosted, added 2026-08-29 as the BODY face, replacing Inter.
+     Same superfamily as the display face, so it shares the skeleton and the detailing and
+     the page reads as one system rather than two. Semi rather than full Condensed on
+     purpose: full Condensed is drawn for headings and short labels, and the two prose
+     blocks on this page (TallyToo, Mata Cam) run long enough that the narrower cut would
+     cost real legibility on a phone.
+     400 and 600 only, both static. A browser fakes bolder but never lighter, so anything
+     wanting less than 400 would need its own file. Vietnamese subset skipped, latin-ext
+     kept because it carries the macrons. */
+  @font-face{
+    font-family:'Saira Semi Condensed';
+    font-style:normal;
+    font-weight:400;
+    font-display:swap;
+    src:url('fonts/saira-semicond-400-latin-ext.woff2') format('woff2');
+    unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  @font-face{
+    font-family:'Saira Semi Condensed';
+    font-style:normal;
+    font-weight:400;
+    font-display:swap;
+    src:url('fonts/saira-semicond-400-latin.woff2') format('woff2');
+    unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face{
+    font-family:'Saira Semi Condensed';
+    font-style:normal;
+    font-weight:600;
+    font-display:swap;
+    src:url('fonts/saira-semicond-600-latin-ext.woff2') format('woff2');
+    unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  @font-face{
+    font-family:'Saira Semi Condensed';
+    font-style:normal;
+    font-weight:600;
+    font-display:swap;
+    src:url('fonts/saira-semicond-600-latin.woff2') format('woff2');
+    unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+
   /* Saira Condensed, self-hosted. SIL Open Font License, same as Inter. Display face only,
      the name and the project titles, so two static weights cover it and there is no need
      for the variable file. Vietnamese subset skipped; latin-ext is kept, it is what
@@ -144,8 +186,12 @@
     --bg:#ffffff;
     --card:#fafafa;
     --maxw:1080px;
-    /* display face for the name and the project titles; everything else stays Inter */
+    /* display face for the name and the project titles */
     --display:'Saira Condensed','Arial Narrow','Segoe UI',system-ui,sans-serif;
+    /* body face, everything else. Same family one width up, see the @font-face note.
+       'Segoe UI Semibold' is not a fallback here on purpose - the stack falls back to
+       normal-width system faces rather than to something that only matches on weight. */
+    --body:'Saira Semi Condensed','Segoe UI',system-ui,sans-serif;
   }
   /* Light is the default for everyone, regardless of OS setting. Dark is opt-in via the
      toggle and persists in localStorage. Deliberate: the site is designed light and the
@@ -171,12 +217,16 @@
   a:active,button:active,.zoomable:active{opacity:.65;}
   body{
     margin:0;
-    font-family:'Inter','Segoe UI Variable Display','Segoe UI',system-ui,sans-serif;
+    font-family:var(--body);
     font-optical-sizing:auto;
     color:var(--ink);
     background:var(--bg);
-    font-size:16px;
-    line-height:1.55;
+    /* Saira Semi Condensed sets narrower and a touch smaller on the eye than Inter did, so
+       the base size goes up a step and the leading opens with it. Narrow faces need MORE
+       line-height, not less: the shorter x-width packs more characters per line, and
+       without the extra leading the eye loses its place returning to the left margin. */
+    font-size:17px;
+    line-height:1.6;
     -webkit-font-smoothing:antialiased;
   }
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
@@ -404,14 +454,27 @@
     font-family:var(--display);
     font-size:20px;font-weight:600;letter-spacing:.01em;margin:0 0 3px;
   }
-  .card .kicker{color:var(--muted);font-size:13px;margin:0 0 10px;}
+  /* Kicker and chips moved onto the display face 2026-08-29, for typographic coherence.
+     Both are LABELS - a phrase, never a sentence - which is what condensed type is for, and
+     they sit directly under a Saira h3 where the mismatch was most visible. The prose in
+     .card p stays Inter: that is the poster line the note above draws, and it holds.
+     Condensed reads smaller at a given size, so 13px goes to 14px and tracking opens a
+     touch to keep it from tightening up at muted contrast. */
+  .card .kicker{
+    font-family:var(--display);
+    font-weight:400;letter-spacing:.02em;
+    color:var(--muted);font-size:14px;margin:0 0 10px;
+  }
   .card .kicker a{border-bottom:1px solid var(--rule);text-decoration:none;}
   .card .kicker a:hover{border-bottom-color:var(--ink);}
   .card p{margin:0 0 12px;font-size:15px;}
   /* chips were the only other boxes on the page, so they became a plain separated line */
   .stack{
     list-style:none;margin:0 0 12px;padding:0;display:flex;flex-wrap:wrap;
-    font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+    font-family:var(--display);font-weight:400;
+    /* uppercase condensed at 11px was already tight; the face is narrower again, so the
+       size goes up a step and the existing .08em tracking does the rest */
+    font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
   }
   .stack li + li::before{content:"·";padding:0 8px;opacity:.55;}
   .links{display:flex;flex-wrap:wrap;gap:16px;font-size:14px;}
