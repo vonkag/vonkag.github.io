@@ -158,18 +158,26 @@
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
   a{color:inherit;}
 
-  /* ---------- header ---------- */
-  header{padding:64px 0 26px;}
+  /* ---------- header ----------
+     The name and the contact icons share a line, icons to the right of the title.
+     align-items:center, NOT baseline. Baseline looks like the right answer and is not: these
+     flex children are icon-only links with no text, so their baseline resolves to the bottom
+     margin edge, which measured 11px below the H1 baseline and read as sagging. Centring on
+     the line box lands within about 5px of the optical centre of the caps and, unlike a tuned
+     nudge, holds as the H1 scales from 54px down to 34px.
+     flex-wrap so they drop under the name if the viewport cannot hold both.
+     Bottom padding down from 26px to 12px to close the gap to the nav bar. */
+  header{padding:64px 0 12px;display:flex;flex-wrap:wrap;align-items:center;gap:0 18px;}
   h1{
     font-family:var(--display);
     /* condensed type reads smaller at a given size and needs less tracking than Inter did
        to keep uppercase open, so both numbers moved with the face */
     font-size:clamp(34px,6vw,54px);
     letter-spacing:.035em;font-weight:800;text-transform:uppercase;
-    line-height:1.05;margin:0 0 6px;
+    line-height:1.05;margin:0;
   }
   .role{color:var(--muted);margin:0 0 14px;font-size:clamp(15px,2vw,17px);}
-  .meta{color:var(--muted);font-size:14px;}
+  .meta{color:var(--muted);font-size:14px;display:flex;align-items:center;gap:14px;}
   .meta a{text-decoration:none;border-bottom:1px solid var(--rule);}
   .meta a:hover{border-bottom-color:var(--ink);}
   .meta .sep{padding:0 8px;color:var(--rule);}
@@ -360,6 +368,14 @@
      momentum and the snap all come from the browser. 68% puts one tile and a slice of the
      next on screen, and that peek is the only thing signalling the row can be swiped.
      min-width:0 lets the row shrink under its content inside the card. */
+  /* Content type comes down a notch on a phone. body and .card p move together so the
+     relationship between them holds; the labels, chips and captions are left alone, since
+     they are already small and shrinking those costs legibility rather than saving space. */
+  @media (max-width:720px){
+    body{font-size:15px;}
+    .card p{font-size:14px;}
+  }
+
   @media (max-width:720px){
     .tiles{
       display:flex;gap:12px;min-width:0;overflow-x:auto;
@@ -609,8 +625,10 @@
          repeats the footer deliberately: someone who reads the top and leaves should not
          have to scroll the whole page to find a way to get in touch. -->
     <div class="meta">
-      <a href="mailto:vonkagaoan@gmail.com"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M3.2 7.2 12 13l8.8-5.8"/></svg>vonkagaoan@gmail.com</a>
-      <span class="sep">·</span>
+      <!-- Icon only up here; the address is spelled out in full in the footer. The
+           separator went with the text: three icons in a row read better on an even gap
+           than split by a middot that used to divide a text link from two icons. -->
+      <a href="mailto:vonkagaoan@gmail.com" class="icon-only" aria-label="Email" title="Email"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M3.2 7.2 12 13l8.8-5.8"/></svg></a>
       <a href="https://instagram.com/vonkagaoan" class="icon-only" aria-label="Instagram" title="Instagram"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg></a>
       <a href="https://nz.linkedin.com/in/von-kagaoan-18b624118" class="icon-only" aria-label="LinkedIn" title="LinkedIn"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="7.6" cy="8" r="1.05" fill="currentColor" stroke="none"/><path d="M7.6 11.4v5.4"/><path d="M11.6 16.8v-5.4"/><path d="M11.6 13.7a2.4 2.4 0 0 1 4.8 0v3.1"/></svg></a>
 </div>
