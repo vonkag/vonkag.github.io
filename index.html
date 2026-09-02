@@ -563,6 +563,12 @@
   /* phone screenshots are 9:16, taller than the keyboard renders */
   .portrait-row.tall .pane{aspect-ratio:9/16;}
   /* the headphone renders were framed square */
+  /* Four panes here, and they stay four. auto-fit drops them to 2x2 at around 830px, which
+     reads as a different card rather than a narrower one, and it splits a set that only makes
+     sense read left to right. Square panes are half the height of the 3:4 ones, so they take
+     the shrink better than the keyboard row would: the columns are pinned and the panes just
+     get smaller. */
+  .portrait-row.square{grid-template-columns:repeat(4,1fr);}
   .portrait-row.square .pane{aspect-ratio:1/1;}
   .portrait-row img,.portrait-row video{
     width:100%;height:100%;object-fit:cover;display:block;
@@ -632,12 +638,17 @@
   @media (max-width:720px){
     .mata-row{grid-template-columns:1fr;}
     .mata-row .reel{grid-column:1;aspect-ratio:9/16;}
-    .portrait-row{
+    .portrait-row:not(.square){
       display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;
       scrollbar-width:none;-webkit-overflow-scrolling:touch;
     }
-    .portrait-row::-webkit-scrollbar{display:none;}
-    .portrait-row .pane{flex:0 0 auto;width:68%;scroll-snap-align:start;}
+    .portrait-row:not(.square)::-webkit-scrollbar{display:none;}
+    .portrait-row:not(.square) .pane{flex:0 0 auto;width:68%;scroll-snap-align:start;}
+    /* The square row keeps its four across on the phone too. The gap closes up so the panes
+       keep as much of the width as they can: on a 390px screen that is about 78px a pane,
+       small, but four headphone renders side by side still read as one set, and swiping
+       through four near-identical squares would be busywork. */
+    .portrait-row.square{gap:6px;}
   }
 
   /* triptych is 1260x746, a touch wider than 16:9, so contain rather than crop the
