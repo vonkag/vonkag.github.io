@@ -563,27 +563,59 @@
      - one clip at a time, hover to lock, caption on whichever is playing - and so its
      sideways scroll already re-triggers the ambient pick. Only the layout here is new. */
   .tiles.strip{
-    display:flex;grid-template-columns:none;
-    gap:10px;overflow-x:auto;padding-bottom:2px;
+    --row:200px;                       /* height of ONE row */
+    --gap:10px;
+    /* Two rows, filled top-to-bottom then rightwards, scrolled sideways. Grid rather than
+       flex because flex-wrap in an overflow-x container wraps at the VISIBLE width, which
+       produces endless vertical rows and no horizontal scroll at all - the opposite of
+       what is wanted. grid-auto-flow:column is the only reliable way to get a fixed row
+       count that scrolls horizontally. */
+    display:grid;
+    grid-auto-flow:column;
+    grid-template-rows:repeat(2,var(--row));
+    /* max-content, not auto: auto columns divide up the container width and the row never
+       overflows, so there is nothing to scroll. justify-content:start stops the tracks
+       being stretched to fill once they do overflow. */
+    grid-auto-columns:max-content;
+    justify-content:start;
+    gap:var(--gap);overflow-x:auto;padding-bottom:2px;
     /* proximity, not mandatory: on a row this long with uneven widths, mandatory fights
        the flick and parks you somewhere you did not aim for */
     scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch;
   }
   .tiles.strip::-webkit-scrollbar{display:none;}
-  /* height + aspect-ratio yields the width. Declared per tile rather than measured off the
-     media, because preload="none" leaves a <video> with no intrinsic size until it is
-     hovered, and a strip that reflows as clips load is worse than one that never does. */
+  /* Explicit height plus aspect-ratio yields a definite width, which is what the auto
+     column then sizes to. Not height:100% - a stretched item's width would depend on a row
+     height the column is still resolving, and browsers handle that circularity poorly.
+     Declared per tile rather than measured off the media, because preload="none" leaves a
+     <video> with no intrinsic size until it is hovered, and a strip that reflows as clips
+     load is worse than one that never does. */
+  /* BOTH dimensions explicit, and width derived by hand from --ar rather than left to
+     aspect-ratio. A max-content column sizes to its item's intrinsic width contribution,
+     and an aspect-ratio box whose <img> is width:100% contributes nothing usable - every
+     column collapsed to ~10px. Height is known here, so width is just height x ratio. */
   .tiles.strip .tile{
-    flex:0 0 auto;height:300px;width:auto;
-    aspect-ratio:1/1;                  /* the controllers, which are most of the row */
+    --h:var(--row);
+    --ar:1;                            /* the controller grid and anything else square */
+    height:var(--h);
+    width:calc(var(--h) * var(--ar));
     scroll-snap-align:start;
   }
-  .tiles.strip .tile.p45  {aspect-ratio:4/5;}
-  .tiles.strip .tile.p34  {aspect-ratio:3/4;}
-  .tiles.strip .tile.w169 {aspect-ratio:16/9;}
-  .tiles.strip .tile.sheet{aspect-ratio:2048/1080;}
+  /* A piece that cannot survive being halved: the breakdown sheet goes illegible, and the
+     controller grid would turn nine objects into 60px thumbnails. These take the height of
+     both rows and hold a column on their own.
+     It also squares the arithmetic - the one-row tiles have to come in an even number or
+     the last column is left half empty. */
+  .tiles.strip .tile.tall{
+    grid-row:span 2;
+    --h:calc(var(--row) * 2 + var(--gap));
+  }
+  .tiles.strip .tile.p45  {--ar:0.8;}      /* 4:5  */
+  .tiles.strip .tile.p34  {--ar:0.75;}     /* 3:4  */
+  .tiles.strip .tile.w169 {--ar:1.7778;}   /* 16:9 */
+  .tiles.strip .tile.sheet{--ar:1.8963;}   /* 2048:1080 */
   @media (max-width:720px){
-    .tiles.strip .tile{height:210px;}
+    .tiles.strip{--row:150px;}
   }
 
   /* ---------- multi-shot tile ----------
@@ -1155,7 +1187,7 @@
           </video>
           <figcaption>Batman &middot; turntable</figcaption>
         </li>
-        <li class="tile sheet" tabindex="0">
+        <li class="tile sheet tall" tabindex="0">
           <img class="zoomable" src="media/sty-batman-topo.jpg"
                alt="Breakdown of the Batman model: finished render, wireframe cage and untextured clay, side by side">
           <figcaption>Batman &middot; beauty, wireframe, clay</figcaption>
@@ -1198,7 +1230,7 @@
                alt="Stylised astronaut lifting off a moon surface on a jetpack against a starfield">
           <figcaption>Jetpack &middot; stylised scene</figcaption>
         </li>
-        <li class="tile p45" tabindex="0">
+        <li class="tile p45 tall" tabindex="0">
           <img class="zoomable" loading="lazy" src="media/sty-alien.jpg"
                alt="Faceted low-poly xenomorph in a wide stance against a green ground">
           <figcaption>Alien &middot; low-poly study</figcaption>
@@ -1214,7 +1246,7 @@
              checkerboard needs: the five on the corners and centre, the four on the edges.
              Do not "fix" this back into release order. Nothing on the card explains the rule
              in words, so the alternation is the only thing that makes it visible. -->
-        <li class="tile" tabindex="0">
+        <li class="tile tall" tabindex="0">
           <div class="ctrl-grid zoomable">
             <img loading="lazy" src="media/ctrl-xbox.jpg"         alt="Stylised Xbox controller, blue on a yellow ground">
             <img loading="lazy" src="media/ctrl-n64.jpg"          alt="Stylised N64 controller, yellow on a blue ground">
