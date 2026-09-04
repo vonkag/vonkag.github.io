@@ -67,3 +67,41 @@ source is gone and those scenes cannot be recovered.
 **Judging cuts from contact sheets has a known blind spot:** frames sampled every 8 to 20
 seconds show composition but not motion. Expect a couple of picks per batch to be duller
 in motion than they looked as stills. `m2-ladder-panel` was exactly that.
+
+## Gallery strip assets (`sty-*`, `ctrl-*`)
+
+Personal stylised work, fed into the strip at the bottom of the 3D section. Encoded to a
+fixed **700px height** rather than a fixed width, because the strip is equal-height with
+natural widths, so height is the dimension that has to agree across the set.
+
+    # stills
+    ffmpeg -i in.png -vf "scale=-2:700:flags=lanczos" -q:v 3 media/sty-name.jpg
+    # loops
+    SCALE="scale=-2:700" ./tools/convert.sh loop "in.mp4" sty-name
+
+Each tile carries an aspect class that must match its file, or the tile letterboxes:
+`p45` (4:5), `p34` (3:4), `w169` (16:9), `sheet` (1.9:1), or none for the 1:1 controllers.
+
+`sty-bot-run` is the exception to the 700px rule: the source is only 960x540, so it is
+encoded at native height rather than upscaled to match.
+
+### Naming: consoles are named, and that is not a break of the rule above
+
+The "never the brand" rule exists to keep **client and employer** names off a public page.
+These are personal fan pieces where the console *is* the subject, so `ctrl-n64` and
+`ctrl-snes` carry no confidentiality risk and a neutral name would only obscure them.
+The rule still holds without exception for anything made for a client.
+
+### The characters are fan art
+
+Batman, Krillin, the Night King and the Alien xenomorph are recognisable licensed
+characters. They are
+captioned as personal studies and must stay that way - never implied as commissioned or
+shipped work.
+
+## Multi-shot tiles (`.shots`)
+
+A tile can carry alternate views: the first image shows in the strip, any marked
+`class="extra"` are hidden there and revealed, stacked and scrollable, in the lightbox.
+Krillin uses it for its three-quarter and front views. Batman has unused `front`, `side`
+and `3-4 close` renders in the source folder that would suit the same treatment.

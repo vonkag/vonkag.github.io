@@ -551,6 +551,80 @@
     color:var(--muted);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
   }
 
+  /* ---------- gallery strip ----------
+     A .tiles row in strip form: one fixed HEIGHT, natural widths, scrolled sideways.
+     The stylised work arrives in four aspect ratios - 4:5 characters, square controllers,
+     16:9 rig captures and a 1.9:1 breakdown sheet. Forcing them into the square or 16:9
+     hole the other rows use would crop composed renders to fit a grid, which is precisely
+     what this set exists to show it does not do. Equal height instead: every piece keeps
+     its own framing and takes the width that framing implies.
+
+     It stays class .tiles on purpose, so the playback coordinator reads it as a tile group
+     - one clip at a time, hover to lock, caption on whichever is playing - and so its
+     sideways scroll already re-triggers the ambient pick. Only the layout here is new. */
+  .tiles.strip{
+    display:flex;grid-template-columns:none;
+    gap:10px;overflow-x:auto;padding-bottom:2px;
+    /* proximity, not mandatory: on a row this long with uneven widths, mandatory fights
+       the flick and parks you somewhere you did not aim for */
+    scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  }
+  .tiles.strip::-webkit-scrollbar{display:none;}
+  /* height + aspect-ratio yields the width. Declared per tile rather than measured off the
+     media, because preload="none" leaves a <video> with no intrinsic size until it is
+     hovered, and a strip that reflows as clips load is worse than one that never does. */
+  .tiles.strip .tile{
+    flex:0 0 auto;height:300px;width:auto;
+    aspect-ratio:1/1;                  /* the controllers, which are most of the row */
+    scroll-snap-align:start;
+  }
+  .tiles.strip .tile.p45  {aspect-ratio:4/5;}
+  .tiles.strip .tile.p34  {aspect-ratio:3/4;}
+  .tiles.strip .tile.w169 {aspect-ratio:16/9;}
+  .tiles.strip .tile.sheet{aspect-ratio:2048/1080;}
+  @media (max-width:720px){
+    .tiles.strip .tile{height:210px;}
+  }
+
+  /* ---------- multi-shot tile ----------
+     A tile that holds more than it shows: the strip renders the first image only, and the
+     lightbox clone reveals the rest and scrolls through them. Same trick as .ctrl-grid -
+     .zoomable sits on the CONTAINER, so cloneNode(true) carries the whole set into the
+     dialog - but where the grid wants all nine visible at once, alternate views of one
+     character want to be compared full size, one after another.
+
+     Extra shots are display:none in the tile rather than absent from it, so there is one
+     source of truth for the set and no second markup block to keep in step. */
+  .shots{width:100%;height:100%;}
+  .shots img{width:100%;height:100%;object-fit:cover;display:block;}
+  .tile .shots img.extra{display:none;}
+  #lightbox-content .shots img{
+    display:block;width:auto;max-width:100%;height:auto;
+    /* shorter than the 86vh the scroller allows, so the next shot always peeks above the
+       fold - with no visible scrollbar that peek is the only thing saying there is more */
+    max-height:74vh;margin:0 auto;object-fit:contain;
+  }
+  #lightbox-content .shots img + img{margin-top:10px;}
+
+  /* ---------- controller grid ----------
+     Nine square stills as ONE tile. .zoomable sits on the GRID rather than on the images,
+     so a click anywhere in it clones the whole grid into the lightbox: the point of this
+     piece is the comparison between the nine, and opening one of them alone destroys it. */
+  .ctrl-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:2px;
+    width:100%;height:100%;
+  }
+  .ctrl-grid img{width:100%;height:100%;object-fit:cover;display:block;}
+  /* Enlarged, the grid is square, so on a short window HEIGHT is the binding constraint,
+     not width. Without the vh term in the min() the bottom row falls off the screen. */
+  #lightbox-content .ctrl-grid{
+    width:min(960px,92vw,82vh);aspect-ratio:1;height:auto;
+    margin:0 auto;gap:6px;
+  }
+  /* the generic lightbox image rule caps every img at 78vh, which here would be applied
+     nine times over and squash the rows */
+  #lightbox-content .ctrl-grid img{max-height:none;border-radius:2px;}
+
   /* ---------- portrait row ----------
      The keyboard work was all cut vertical for Instagram (3:4 and 9:16). Rather than
      crop it into a 16:9 hole, three 3:4 panels sit side by side and fill the width. */
@@ -720,6 +794,22 @@
   dialog#lightbox::backdrop{background:rgba(0,0,0,.9);}
   #lightbox-content img,#lightbox-content video{
     width:100%;height:auto;max-height:78vh;object-fit:contain;display:block;border-radius:4px;
+  }
+  /* Scrolls only when there is something to scroll: a lone image is capped at 78vh and sits
+     inside this without ever reaching the limit. It is .shots tiles, which stack several
+     images, that need it. */
+  /* Thin and dim rather than the browser default: a bright white bar lands directly on the
+     artwork and pulls harder than the images beside it. Not hidden outright the way the
+     horizontal scrollers on this page are - vertical is the axis people actually reach for,
+     and a .shots set needs to look scrollable. */
+  #lightbox-content{
+    max-height:86vh;overflow-y:auto;
+    scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.32) transparent;
+  }
+  #lightbox-content::-webkit-scrollbar{width:8px;}
+  #lightbox-content::-webkit-scrollbar-track{background:transparent;}
+  #lightbox-content::-webkit-scrollbar-thumb{
+    background:rgba(255,255,255,.32);border-radius:4px;
   }
   #lightbox-caption{
     color:#e6e6e6;font-size:13px;text-align:center;
@@ -1030,6 +1120,129 @@
              is not said twice in the same card. -->
         <p class="kicker">Web series, TVCs, and personal work</p>
         <ul class="stack"><li>Maya</li><li>Blender</li><li>Character animation</li></ul>
+      </div>
+    </article>
+
+    <!-- ========== STYLISED WORK: GALLERY STRIP ==========
+         Last card in the section, and the only one that is a strip rather than a fixed
+         grid. The work in it is personal and it spans years, so it is shown as a body of
+         work you scan rather than as five more cards competing with the VR and product
+         pieces above. See .tiles.strip in the CSS for why it is equal-height.
+
+         Order is deliberate: the character breakdown first, then the rig, then the studies,
+         then the nine controllers as an unbroken run. The controllers only make their point
+         when several are seen at once - the palette inverts between subject and ground and
+         nothing else moves - so they are never split up or interleaved.
+
+         Aspect class per tile: p45 (4:5), p34 (3:4), w169 (16:9), sheet (1.9:1), or none
+         for the 1:1 controllers. It must match the file, or the tile letterboxes. -->
+    <article class="card feature">
+      <!-- .carousel-wrap exists only to position the arrows over the strip. The strip
+           itself stays a plain .tiles row - see the arrow script for why it is not the
+           carousel proper. -->
+      <div class="carousel-wrap">
+      <ul class="tiles strip" aria-label="Stylised personal work">
+
+        <li class="tile p45" tabindex="0">
+          <img class="zoomable" src="media/sty-batman-34.jpg"
+               alt="Stylised Batman character model, three-quarter view, matte black and grey with a gold belt">
+          <figcaption>Batman &middot; personal study</figcaption>
+        </li>
+        <li class="tile p45" tabindex="0">
+          <video class="zoomable" muted loop playsinline preload="none"
+                 poster="media/sty-batman-turn-poster.jpg">
+            <source src="media/sty-batman-turn.mp4" type="video/mp4">
+          </video>
+          <figcaption>Batman &middot; turntable</figcaption>
+        </li>
+        <li class="tile sheet" tabindex="0">
+          <img class="zoomable" src="media/sty-batman-topo.jpg"
+               alt="Breakdown of the Batman model: finished render, wireframe cage and untextured clay, side by side">
+          <figcaption>Batman &middot; beauty, wireframe, clay</figcaption>
+        </li>
+
+        <li class="tile w169" tabindex="0">
+          <video class="zoomable" muted loop playsinline preload="none"
+                 poster="media/sty-bot-run-poster.jpg">
+            <source src="media/sty-bot-run.mp4" type="video/mp4">
+          </video>
+          <figcaption>YooBot &middot; run cycle</figcaption>
+        </li>
+        <li class="tile w169" tabindex="0">
+          <img class="zoomable" loading="lazy" src="media/sty-bot-rig.jpg"
+               alt="The YooBot character in a Maya viewport showing its animation rig: control curves at the hips, spine, wrists and feet">
+          <figcaption>YooBot &middot; rig and controls</figcaption>
+        </li>
+
+        <li class="tile p45" tabindex="0">
+          <div class="shots zoomable">
+            <img loading="lazy" src="media/sty-krillin-34.jpg"
+                 alt="Krillin, stylised in chibi proportions, three-quarter view on a beach">
+            <img loading="lazy" class="extra" src="media/sty-krillin-front.jpg"
+                 alt="The same Krillin model from the front, showing the symmetry of the face and gi">
+          </div>
+          <figcaption>Krillin &middot; personal study</figcaption>
+        </li>
+        <li class="tile p45" tabindex="0">
+          <img class="zoomable" loading="lazy" src="media/sty-nightking.jpg"
+               alt="The Night King in faceted low poly, arms outstretched, a crowd silhouetted in the haze behind him">
+          <figcaption>Night King &middot; low-poly study</figcaption>
+        </li>
+        <li class="tile p34" tabindex="0">
+          <img class="zoomable" loading="lazy" src="media/sty-bust.jpg"
+               alt="Faceted low-poly bust of a bearded figure in stone-grey armour">
+          <figcaption>Faceted bust</figcaption>
+        </li>
+        <li class="tile p45" tabindex="0">
+          <img class="zoomable" loading="lazy" src="media/sty-jetpack.jpg"
+               alt="Stylised astronaut lifting off a moon surface on a jetpack against a starfield">
+          <figcaption>Jetpack &middot; stylised scene</figcaption>
+        </li>
+        <li class="tile p45" tabindex="0">
+          <img class="zoomable" loading="lazy" src="media/sty-alien.jpg"
+               alt="Faceted low-poly xenomorph in a wide stance against a green ground">
+          <figcaption>Alien &middot; low-poly study</figcaption>
+        </li>
+
+        <!-- The nine controllers as ONE tile rather than nine.
+             They are a set, and a set only reads as one if you see it all at once; scrolled
+             past one at a time it is nine pleasant renders and no argument. Clicking opens
+             the same grid large, because the comparison IS the piece.
+
+             The order is a checkerboard, NOT console chronology. Five of the nine put a blue
+             object on a yellow ground and four invert it, which is exactly the split a 3x3
+             checkerboard needs: the five on the corners and centre, the four on the edges.
+             Do not "fix" this back into release order. Nothing on the card explains the rule
+             in words, so the alternation is the only thing that makes it visible. -->
+        <li class="tile" tabindex="0">
+          <div class="ctrl-grid zoomable">
+            <img loading="lazy" src="media/ctrl-xbox.jpg"         alt="Stylised Xbox controller, blue on a yellow ground">
+            <img loading="lazy" src="media/ctrl-n64.jpg"          alt="Stylised N64 controller, yellow on a blue ground">
+            <img loading="lazy" src="media/ctrl-ps1.jpg"          alt="Stylised PlayStation controller, blue on a yellow ground">
+            <img loading="lazy" src="media/ctrl-snes.jpg"         alt="Stylised SNES controller, yellow on a blue ground">
+            <img loading="lazy" src="media/ctrl-saturn.jpg"       alt="Stylised Sega Saturn controller, blue on a yellow ground">
+            <img loading="lazy" src="media/ctrl-nes.jpg"          alt="Stylised NES controller, yellow on a blue ground">
+            <img loading="lazy" src="media/ctrl-genesis.jpg"      alt="Stylised Sega Genesis controller, blue on a yellow ground">
+            <img loading="lazy" src="media/ctrl-gamecube.jpg"     alt="Stylised GameCube controller, yellow on a blue ground">
+            <img loading="lazy" src="media/ctrl-mastersystem.jpg" alt="Stylised Sega Master System controller, blue on a yellow ground">
+          </div>
+          <figcaption>Retro controllers &middot; nine pieces, one rule</figcaption>
+        </li>
+
+      </ul>
+      <button class="car-btn prev" type="button" aria-label="Scroll left">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4 7 12l8 8"/></svg>
+      </button>
+      <button class="car-btn next" type="button" aria-label="Scroll right">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 4 8 8-8 8"/></svg>
+      </button>
+      </div>
+      <div class="body">
+        <h3>Stylised work</h3>
+        <p class="kicker">Characters, props and rigs &middot; personal projects</p>
+        <ul class="stack"><li>Blender</li><li>Maya</li><li>Stylised</li><li>Character</li><li>Rigging</li></ul>
       </div>
     </article>
 
@@ -1701,6 +1914,61 @@
         es.forEach(function (e) { e.isIntersecting ? start() : stop(); });
       }, { threshold: 0.3 }).observe(el);
     } else { start(); }
+  });
+})();
+</script>
+
+<script>
+/* Gallery strip arrows.
+   The strip runs twenty tiles wide and about three fit on screen, so on a mouse something
+   has to say so. A phone gets the swipe affordance for free; a trackpad does not, and a
+   visitor who stops at the third tile never reaches the controller set the card text is
+   talking about.
+
+   Deliberately NOT the carousel script above. That one clones panes to make the loop
+   seamless, and a cloned <video> would show up twice in the playback coordinator's group
+   for this card. This only scrolls. */
+(function () {
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  [].forEach.call(document.querySelectorAll('.tiles.strip'), function (strip) {
+    var wrap = strip.parentNode;
+    if (!wrap || !wrap.classList.contains('carousel-wrap')) return;
+    var prev = wrap.querySelector('.car-btn.prev');
+    var next = wrap.querySelector('.car-btn.next');
+    if (!prev || !next) return;
+
+    /* nothing to scroll on a very wide window: leave the arrows off entirely rather than
+       show a pair that cannot move */
+    if (strip.scrollWidth <= strip.clientWidth + 4) return;
+    wrap.classList.add('has-controls');
+
+    function step(dir) {
+      strip.scrollBy({
+        left: dir * strip.clientWidth * 0.8,
+        behavior: reduced ? 'auto' : 'smooth'
+      });
+    }
+    /* visibility rather than display: the buttons keep their slot, so the one that remains
+       does not jump sideways when the other goes */
+    function sync() {
+      var max = strip.scrollWidth - strip.clientWidth;
+      prev.style.visibility = strip.scrollLeft > 4       ? 'visible' : 'hidden';
+      next.style.visibility = strip.scrollLeft < max - 4 ? 'visible' : 'hidden';
+    }
+
+    prev.addEventListener('click', function () { step(-1); });
+    next.addEventListener('click', function () { step(1); });
+
+    var queued = false;
+    strip.addEventListener('scroll', function () {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(function () { queued = false; sync(); });
+    }, { passive: true });
+    window.addEventListener('resize', sync);
+
+    sync();
   });
 })();
 </script>
